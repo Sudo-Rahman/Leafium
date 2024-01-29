@@ -2,8 +2,10 @@ import pymongo
 
 
 class Database:
-    def __init__(self, host: str, port: int, database: str):
+    def __init__(self, host: str, port: int, database: str, user: str = None, password: str = None):
         self.db = pymongo.MongoClient(host, port)[database]
+        if user and password:
+            self.db.authenticate(user, password)
 
     def populate(self, n: int):
         for i in range(n):
