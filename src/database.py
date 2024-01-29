@@ -3,6 +3,8 @@ import random
 
 import pymongo
 
+from src.data import *
+
 
 class Database:
     def __init__(self, host: str, port: int, database: str, user: str = None, password: str = None):
@@ -11,41 +13,44 @@ class Database:
             self.db.authenticate(user, password)
 
     def populate(self, cinema: int, film: int):
-        for i in range(cinema):
-            ticket_sold = math.floor(random.random() * 500)
-            self.insert_cinema({
-                "name": f"cinema{i}",
-                "address": f"address{i}",
-                "rooms": [
-                    {
-                        "name": f"room{i}",
-                        "capacity": ticket_sold,
-                        "broadcasts": [
-                            {
-                                "_id_film": math.floor(random.random() * 10),
-                                "date_broadcast": f"20{math.floor(random.random() * 24)}-01-01 {math.floor(random.random() * 14 + 10)}:00:00",
-                                "price": math.floor(random.random() * 10) + 5,
-                                "ticket_sold": math.floor(random.random() * ticket_sold)
-                            }
-                        ]
-                    }
-                ]
-            })
 
         for i in range(film):
             self.insert_film({
                 "release_date": f"20{math.floor(random.random() * 24)}-01-01",
-                "title": ''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(20)),
+                "title": titres_de_films[math.floor(random.random() * len(titres_de_films))],
                 "duration": math.floor(random.random() * 100) + 60,
                 "description": ''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(100)),
-                "directors": [''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(20)) for _ in range(math.floor(random.random() * 100))],
-                "categories": [''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(10)) for _ in range(math.floor(random.random() * 10))],
+                "directors": [realisateurs_de_films[math.floor(random.random() * len(realisateurs_de_films))] for _ in
+                              range(math.floor(random.random() * 3))],
+                "categories": [genres_de_films[math.floor(random.random() * len(genres_de_films))] for _ in
+                               range(math.floor(random.random() * 10))],
                 "comments": [
                     {
-                        "author": ''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(20)),
-                        "content": ''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(100)),
-                        "rating": math.floor(random.random() * 5) + 1,
+                        "author": users[math.floor(random.random() * len(users))],
+                        **commentaires_et_notes_de_films[math.floor(random.random() * len(commentaires_et_notes_de_films))]
                     } for _ in range(math.floor(random.random() * 100))
+                ]
+            })
+
+        films_id_list = [film["_id"] for film in self.get_films({}, {"_id": 1})]
+
+        for i in range(cinema):
+            capacity = math.floor(random.random() * 500)
+            self.insert_cinema({
+                **cinemas[math.floor(random.random() * len(cinemas))],
+                "rooms": [
+                    {
+                        "name": f"room{i}",
+                        "capacity": capacity,
+                        "broadcasts": [
+                            {
+                                "_id_film": films_id_list[math.floor(random.random() * len(films_id_list))],
+                                "date_broadcast": f"20{math.floor(random.random() * 24)}-01-01 {math.floor(random.random() * 14 + 10)}:00:00",
+                                "price": math.floor(random.random() * 10) + 5,
+                                "ticket_sold": math.floor(random.random() * capacity)
+                            }
+                        ]
+                    } for i in range(math.floor(random.random() * 10))
                 ]
             })
 
