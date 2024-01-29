@@ -1,27 +1,25 @@
 {
-  "_id_cinema" : 0,
-  "rooms" : [
+  "name": "Cinema 1",
+  "rooms": [
     {
-      "_id_room" : 0,
-      "capacity" : 100,
-      "broadcasts" : [
+      "capacity": 100,
+      "broadcasts": [
         {
-          "_id_broadcast" : 0,
           "_id_film": 0,
-          "ticket_sold" : 98,
-          "date_broadcast" : "27/12/2023 14:00:00"
+          "ticket_sold": 98,
+          "date_broadcast": "27/12/2023 14:00:00",
+          "price": 10
         }
       ]
     },
     {
-      "_id_room" : 1,
-      "capacity" : 67,
-      "broadcasts" : [
+      "capacity": 67,
+      "broadcasts": [
         {
-          "_id_broadcast" : 1,
           "_id_film": 0,
-          "ticket_sold" : 47,
-          "date_broadcast" : "27/12/2023 14:30:00"
+          "ticket_sold": 47,
+          "date_broadcast": "27/12/2023 14:30:00",
+          "price": 5.5
         }
       ]
     }

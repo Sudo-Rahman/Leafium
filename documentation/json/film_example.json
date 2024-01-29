@@ -1,21 +1,22 @@
 {
-  "_id_film" : 0,
+  "_id_film": 0,
   "release": "27/12/2023",
-  "title" : "Les SEGPA au ski",
-  "Directors" : ["Ali Boughéraba", "Hakim Boughéraba"],
-  "description" : "Les Segpa se retrouvent pour une nouvelle année scolaire riche en aventures, propulsés directement en Terminale. Deux challenges majeurs les attendent : la réussite de leur bac et leur participation soudaine aux Olympiades d’hiver inter-lycées.",
-  "duration" : 102,
+  "title": "Les SEGPA au ski",
+  "Directors": [
+    "Ali Boughéraba",
+    "Hakim Boughéraba"
+  ],
+  "description": "Les Segpa se retrouvent pour une nouvelle année scolaire riche en aventures, propulsés directement en Terminale. Deux challenges majeurs les attendent : la réussite de leur bac et leur participation soudaine aux Olympiades d’hiver inter-lycées.",
+  "duration": 102,
   "comments": [
     {
-      "_id_commnent" : 0,
-      "comment" : "Film tres mauvais",
-      "score": 0,
+      "comment": "Film tres mauvais",
+      "rating": 0,
       "user_pseudo": "Jean Michel"
     },
     {
-      "_id_commnent" : 1,
-      "comment" : "nul germain",
-      "score": 1,
+      "comment": "nul germain",
+      "rating": 1,
       "user_pseudo": "papa ou t'est"
     }
   ],

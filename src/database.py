@@ -1,3 +1,6 @@
+import math
+import random
+
 import pymongo
 
 
@@ -7,36 +10,88 @@ class Database:
         if user and password:
             self.db.authenticate(user, password)
 
-    def populate(self, n: int):
-        for i in range(n):
-            pass
+    def populate(self, cinema: int, film: int):
+        for i in range(cinema):
+            ticket_sold = math.floor(random.random() * 500)
+            self.insert_cinema({
+                "name": f"cinema{i}",
+                "address": f"address{i}",
+                "rooms": [
+                    {
+                        "name": f"room{i}",
+                        "capacity": ticket_sold,
+                        "broadcasts": [
+                            {
+                                "_id_film": math.floor(random.random() * 10),
+                                "date_broadcast": f"20{math.floor(random.random() * 24)}-01-01 {math.floor(random.random() * 14 + 10)}:00:00",
+                                "price": math.floor(random.random() * 10) + 5,
+                                "ticket_sold": math.floor(random.random() * ticket_sold)
+                            }
+                        ]
+                    }
+                ]
+            })
 
-    def get_all(self):
-        return self.db.film.find()
+        for i in range(film):
+            self.insert_film({
+                "release_date": f"20{math.floor(random.random() * 24)}-01-01",
+                "title": ''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(20)),
+                "duration": math.floor(random.random() * 100) + 60,
+                "description": ''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(100)),
+                "directors": [''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(20)) for _ in range(math.floor(random.random() * 100))],
+                "categories": [''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(10)) for _ in range(math.floor(random.random() * 10))],
+                "comments": [
+                    {
+                        "author": ''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(20)),
+                        "content": ''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(100)),
+                        "rating": math.floor(random.random() * 5) + 1,
+                    } for _ in range(math.floor(random.random() * 100))
+                ]
+            })
 
-    def get_by_title(self, title: str):
-        return self.db.film.find_one({"title": title})
+    def get(self, collection: str, query: dict = None, projection: dict = None):
+        if query is None:
+            query = {}
+        if projection is None:
+            projection = {}
+        return self.db[collection].find(query, projection)
 
-    def get_by_year(self, year: int):
-        return self.db.film.find_one({"year": year})
+    def get_one(self, collection: str, query: dict = None, projection: dict = None):
+        if query is None:
+            query = {}
+        if projection is None:
+            projection = {}
+        return self.db[collection].find_one(query, projection)
 
-    def get_by_genre(self, genre: str):
-        return self.db.film.find_one({"genre": genre})
+    def get_films(self, query: dict = None, projection: dict = None):
+        return self.get("films", query, projection)
 
-    def get_by_director(self, director: str):
-        return self.db.film.find_one({"director": director})
+    def get_cinemas(self, query: dict = None, projection: dict = None):
+        return self.get("cinemas", query, projection)
 
-    def get_by_country(self, country: str):
-        return self.db.film.find_one({"country": country})
+    def get_film(self, query: dict = None, projection: dict = None):
+        return self.get_one("films", query, projection)
 
-    def get_by_duration(self, duration: int):
-        return self.db.film.find_one({"duration": duration})
+    def get_cinema(self, query: dict = None, projection: dict = None):
+        return self.get_one("cinemas", query, projection)
 
-    def get_by_id(self, id: str):
-        return self.db.film.find_one({"_id": id})
+    def insert(self, collection: str, document: dict):
+        return self.db[collection].insert_one(document)
 
-    def insert(self, film: dict):
-        self.db.film.insert_one(film)
+    def insert_many(self, collection: str, documents: list):
+        return self.db[collection].insert_many(documents)
 
-    def update(self, id: str, film: dict):
-        self.db.film.update_one({"_id": id}, {"$set": film})
+    def update(self, collection: str, query: dict, update: dict):
+        return self.db[collection].update_one(query, update)
+
+    def insert_film(self, film: dict):
+        return self.insert("films", film)
+
+    def insert_films(self, films: list):
+        return self.insert_many("films", films)
+
+    def insert_cinema(self, cinema: dict):
+        return self.insert("cinemas", cinema)
+
+    def insert_cinemas(self, cinemas: list):
+        return self.insert_many("cinemas", cinemas)

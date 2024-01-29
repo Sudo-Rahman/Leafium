@@ -1,5 +1,7 @@
 from time import sleep
 
+from pymongo.errors import ConnectionFailure
+
 from database import Database
 
 
@@ -34,5 +36,11 @@ def connection():
 
 
 if __name__ == '__main__':
-    db = connection()
-    sleep(1)
+    try:
+        db = connection()
+        sleep(1)
+    except Exception as e:
+        print("Server not available")
+        exit(1)
+    # db.populate(10, 100)
+    db.get_cinema()
