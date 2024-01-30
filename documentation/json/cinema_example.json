@@ -1,5 +1,11 @@
 {
   "name": "Cinema 1",
+  "adress" : {
+    "street": "Rue de la paix",
+    "number": 1,
+    "city": "Paris",
+    "zip": 75000
+  },
   "rooms": [
     {
       "capacity": 100,

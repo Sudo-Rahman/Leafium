@@ -42,4 +42,4 @@ if __name__ == '__main__':
     except Exception as e:
         print("Server not available")
         exit(1)
-    db.populate(10, 100)
+    db.populate(1000)

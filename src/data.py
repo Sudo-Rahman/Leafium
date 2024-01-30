@@ -60,39 +60,6 @@ titres_de_films = [
     "La boite noire",
     "Le voyage de Chihiro",
     "Le loup de Wall Street",
-    "La ligne verte",
-    "Le Parrain",
-    "Avengers: Endgame",
-    "Avengers: Infinity War",
-    "Black Panther",
-    "Harry Potter et la chambre des secrets",
-    "Harry Potter et la coupe de feu",
-    "Harry Potter et la pierre philosophale",
-    "Harry Potter et le prisonnier d'Azkaban",
-    "Star Wars: Episode V - The Empire Strikes Back",
-    "Star Wars: Episode VI - Return of the Jedi",
-    "Star Wars: Episode VII - The Force Awakens",
-    "Once Upon a Time... In Hollywood",
-    "The Irishman",
-    "Joker",
-    "The Dark Knight Rises",
-    "Interstellar",
-    "Django Unchained",
-    "Inglourious Basterds",
-    "Fight Club",
-    "Seven",
-    "The Curious Case of Benjamin Button",
-    "The Revenant",
-    "The Wolf of Wall Street",
-    "Shutter Island",
-    "The Departed",
-    "The Aviator",
-    "Titanic",
-    "Gangs of New York",
-    "Catch Me If You Can",
-    "Gare de Lyon",
-    "Rattrapage : Un combat pour la vie",
-    "Le Lac des apagnans"
 ]
 
 commentaires_et_notes_de_films = [
@@ -190,36 +157,94 @@ commentaires_et_notes_de_films = [
 
 # Liste des cinémas
 cinemas = [
-    {"name": "UGC Ciné Cité Les Halles", "address": "7 Place de la Rotonde, 75001 Paris"},
-    {"name": "Gaumont Opéra Capucines", "address": "2 Boulevard Montmartre, 75009 Paris"},
-    {"name": "Pathé Wepler", "address": "140 Boulevard de Clichy, 75018 Paris"},
-    {"name": "MK2 Bibliothèque", "address": "128-162 Avenue de France, 75013 Paris"},
-    {"name": "Le Grand Rex", "address": "1 Boulevard Poissonnière, 75002 Paris"},
-    {"name": "UGC Ciné Cité Bercy", "address": "2 Cour Saint-Émilion, 75012 Paris"},
-    {"name": "Pathé La Villette", "address": "30 Avenue Corentin Cariou, 75019 Paris"},
-    {"name": "Le Louxor - Palais du Cinéma", "address": "170 Boulevard de Magenta, 75010 Paris"},
-    {"name": "MK2 Quai de Seine", "address": "14 Quai de la Seine, 75019 Paris"},
-    {"name": "Cinéma des Cinéastes", "address": "7 Avenue de Clichy, 75017 Paris"},
-    {"name": "UGC Ciné Cité Paris 19", "address": "166 Boulevard Macdonald, 75019 Paris"},
-    {"name": "Pathé Beaugrenelle", "address": "7 Rue Linois, 75015 Paris"},
-    {"name": "Les 3 Luxembourg", "address": "67 Rue Monsieur le Prince, 75006 Paris"},
-    {"name": "Cinéma du Panthéon", "address": "13 Rue Victor Cousin, 75005 Paris"},
-    {"name": "Le Champo - Espace Jacques Tati", "address": "51 Rue des Écoles, 75005 Paris"},
-    {"name": "Gaumont Parnasse", "address": "73 Avenue du Maine, 75014 Paris"},
-    {"name": "Le Brady", "address": "39 Boulevard de Strasbourg, 75010 Paris"},
-    {"name": "La Cinémathèque française", "address": "51 Rue de Bercy, 75012 Paris"},
-    {"name": "Studio Galande", "address": "42 Rue Galande, 75005 Paris"},
-    {"name": "Max Linder Panorama", "address": "24 Boulevard Poissonnière, 75009 Paris"},
-    {"name": "Pathé Toulouse", "address": "26 Allées Charles de Fitte, 31300 Toulouse"},
-    {"name": "MK2 Lyon Bellecour", "address": "60 Rue Bellecour, 69002 Lyon"},
-    {"name": "Gaumont Montpellier Multiplexe", "address": "235 Rue Georges Méliès, 34000 Montpellier"},
-    {"name": "Ciné Utopia", "address": "5 Avenue du Docteur Pezet, 34090 Montpellier"},
-    {"name": "Le Méliès", "address": "12 Place Jean Jaurès, 31000 Toulouse"},
-    {"name": "UGC Bordeaux", "address": "5 Rue Montesquieu, 33000 Bordeaux"},
-    {"name": "Gaumont Rennes", "address": "13 Rue Yvonne Jean-Haffen, 35000 Rennes"},
-    {"name": "Cinéma Gaumont Wilson", "address": "3 Place du Président Thomas Wilson, 31000 Toulouse"},
-    {"name": "Cinéma Gaumont Labège", "address": "Centre Commercial Labège 2, 700 La Pyrénéenne, 31670 Labège"},
-    {"name": "Cinéma Gaumont Nantes", "address": "Place du Commerce, 44000 Nantes"},
-    {"name": "Cinéma Gaumont Rennes", "address": "13 Rue Yvonne Jean-Haffen, 35000 Rennes"},
-
+    {
+        "name": "UGC Ciné Cité Les Halles",
+        "address": {
+            "street": "Place de la Rotonde",
+            "number": 7,
+            "city": "Paris",
+            "zip": 75001
+        }
+    },
+    {
+        "name": "Gaumont Opéra Capucines",
+        "address": {
+            "street": "Boulevard Montmartre",
+            "number": 2,
+            "city": "Paris",
+            "zip": 75009
+        }
+    },
+    {
+        "name": "Pathé Wepler",
+        "address": {
+            "street": "Boulevard de Clichy",
+            "number": 140,
+            "city": "Paris",
+            "zip": 75018
+        }
+    },
+    {
+        "name": "MK2 Bibliothèque",
+        "address": {
+            "street": "Avenue de France",
+            "number": 128,
+            "city": "Paris",
+            "zip": 75013
+        }
+    },
+    {
+        "name": "Le Grand Rex",
+        "address": {
+            "street": "Boulevard Poissonnière",
+            "number": 1,
+            "city": "Paris",
+            "zip": 75002
+        }
+    },
+    {
+        "name": "UGC Ciné Cité Bercy",
+        "address": {
+            "street": "Cour Saint-Émilion",
+            "number": 2,
+            "city": "Paris",
+            "zip": 75012
+        }
+    },
+    {
+        "name": "Pathé La Villette",
+        "address": {
+            "street": "Avenue Corentin Cariou",
+            "number": 30,
+            "city": "Paris",
+            "zip": 75019
+        }
+    },
+    {
+        "name": "Le Louxor - Palais du Cinéma",
+        "address": {
+            "street": "Boulevard de Magenta",
+            "number": 170,
+            "city": "Paris",
+            "zip": 75010
+        }
+    },
+    {
+        "name": "MK2 Quai de Seine",
+        "address": {
+            "street": "Quai de la Seine",
+            "number": 14,
+            "city": "Paris",
+            "zip": 75019
+        }
+    },
+    {
+        "name": "Cinéma des Cinéastes",
+        "address": {
+            "street": "Avenue de Clichy",
+            "number": 7,
+            "city": "Paris",
+            "zip": 75017
+        }
+    }
 ]
