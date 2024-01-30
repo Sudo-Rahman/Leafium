@@ -240,3 +240,118 @@ db.cinemas.insertOne({
 ```js
 db.cinemas.deleteMany({"address.city": "Paris"})
 ```
+
+### Requête 13 : afficher le top 10 des films qui ont fait le plus d'entrée
+
+```js
+db.cinemas.aggregate([
+    {
+        $project: {
+            _id: 0,
+            name: 1,
+            _: {
+                $map: {
+                    input: "$rooms",
+                    as: "room",
+                    in: {
+                        film: {
+                            $map: {
+                                input: "$$room.broadcasts",
+                                as: "broadcast",
+                                in: {
+                                    _id_film: "$$broadcast._id_film",
+                                    entree: "$$broadcast.ticket_sold"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    {
+        $unwind: "$_"
+    },
+    {
+        $unwind: "$_.film"
+    },
+    {
+        $group: {
+            _id: "$_.film._id_film",
+            entree: {
+                $sum: "$_.film.entree"
+            }
+        }
+    },
+    {
+        $sort: {
+            entree: -1
+        }
+    },
+    {
+        $limit: 10
+    },
+    {
+        $lookup: {
+            from: "films",
+            localField: "_id",
+            foreignField: "_id",
+            as: "film"
+        }
+    },
+    {
+        $unwind: "$film"
+    },
+    {
+        $project: {
+            _id: 0,
+            title: "$film.title",
+            entree: 1
+        }
+    }
+])
+```
+
+### Requête 14 : afficher les films avec leur nombre de commentair trier par ordre decroissant
+
+```js
+db.films.aggregate([{
+    $project: {
+        _id: 0,
+        title: 1,
+        nb_commentaire: {
+            $size: "$comments"
+        }
+    }
+},
+    {
+        $sort: {
+            nb_commentaire: -1
+        }
+    }
+])
+```
+
+### Requête 15 : afficher le top 10 des films avec la meilleur moyenne de note
+
+```js
+db.films.aggregate([
+    {
+        $project: {
+            _id: 0,
+            moyenne_note: {
+                $avg: "$comments.rating"
+            },
+            document: "$$ROOT",
+        }
+    },
+    {
+        $sort: {
+            moyenne_note: -1
+        }
+    },
+    {
+        $limit: 10
+    },
+])
+```

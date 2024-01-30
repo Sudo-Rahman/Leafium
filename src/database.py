@@ -28,7 +28,7 @@ class Database:
                     {
                         "author": users[math.floor(random.random() * len(users))],
                         **commentaires_et_notes_de_films[math.floor(random.random() * len(commentaires_et_notes_de_films))]
-                    } for _ in range(math.floor(random.random() * 100))
+                    } for _ in range(math.floor(random.random() * film))
                 ]
             })
 
