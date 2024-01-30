@@ -45,10 +45,10 @@ class Database:
                         "broadcasts": [
                             {
                                 "_id_film": films_id_list[math.floor(random.random() * len(films_id_list))],
-                                "date_broadcast": f"20{math.floor(random.random() * 24)}-01-01 {math.floor(random.random() * 14 + 10)}:00:00",
+                                "date_broadcast": f"{math.floor(random.random() * 30)}/{math.floor(random.random() * 12)}/20{math.floor(random.random() * 24)} {math.floor(random.random() * 14 + 10)}:00:00",
                                 "price": math.floor(random.random() * 10) + 5,
                                 "ticket_sold": math.floor(random.random() * capacity)
-                            }
+                            } for _ in range(math.floor(random.random() * 100))
                         ]
                     } for i in range(math.floor(random.random() * 10))
                 ]

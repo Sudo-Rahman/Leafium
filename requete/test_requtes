@@ -1,0 +1,165 @@
+use leafium
+
+// afficher le cinema UGC Ciné Cité Les Halles
+db.cinemas.find({
+    "name": "UGC Ciné Cité Les Halles"
+})
+
+// afficher le nombre de salle de chque cinema
+db.cinemas.aggregate([{
+    $project: {
+        _id: 0,
+        name: 1,
+        nb_salle: {
+            $size: "$rooms"
+        }
+    }
+}])
+
+// afficher le nombre de siege de chaque cinena
+db.cinemas.aggregate([{
+    $project: {
+        _id: 0,
+        name: 1,
+        nb_siege: {
+            $sum: "$rooms.capacity"
+        }
+    }
+}])
+
+// afficher le nombre de diffusion de chaque cinema
+db.cinemas.aggregate([{
+    $project: {
+        _id: 0,
+        name: 1,
+        nb_diffusion: {
+            $sum: {
+                $map: {
+                    input: "$rooms",
+                    as: "room",
+                    in: {
+                        $size: "$$room.broadcasts"
+                    }
+                }
+            }
+        }
+    }
+}])
+
+// afficher le nombre de ticket vendu par cinema
+db.cinemas.aggregate([{
+    $project: {
+        _id: 0,
+        name: 1,
+        nb_ticket: {
+            $sum: {
+                $map: {
+                    input: "$rooms",
+                    as: "room",
+                    in: {
+                        $sum: "$$room.broadcasts.ticket_sold"
+                    }
+                }
+            }
+        }
+    }
+}])
+
+// afficher le chiffre d'affaire de chaque cinema
+db.cinemas.aggregate([{
+    $project: {
+        _id: 0,
+        name: 1,
+        chiffre_affaire: {
+            $sum: {
+                $map: {
+                    input: "$rooms",
+                    as: "room",
+                    in: {
+                        $sum: {
+                            $map: {
+                                input: "$$room.broadcasts",
+                                as: "broadcast",
+                                in: {
+                                    $multiply: ["$$broadcast.ticket_sold", "$$broadcast.price"]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}])
+
+// afficher l'id du film ainsi que sa recette pour le film qui a fait le plus de recette
+db.cinemas.aggregate([
+    {
+        $project: {
+            _id: 0,
+            name: 1,
+            chiffre_affaire: {
+                salle: {
+                    $map: {
+                        input: "$rooms",
+                        as: "room",
+                        in: {
+                            film: {
+                                $map: {
+                                    input: "$$room.broadcasts",
+                                    as: "broadcast",
+                                    in: {
+                                        _id_film: "$$broadcast._id_film",
+                                        recette: {
+                                            $multiply: ["$$broadcast.ticket_sold", "$$broadcast.price"]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    {
+        $unwind: "$chiffre_affaire.salle"
+    },
+    {
+        $unwind: "$chiffre_affaire.salle.film"
+    },
+    {
+        $group: {
+            _id: "$chiffre_affaire.salle.film._id_film",
+            recette: {
+                $sum: "$chiffre_affaire.salle.film.recette"
+            }
+        }
+    },
+    {
+        $sort: {
+            recette: -1
+        }
+    },
+    {
+        $limit: 1
+    },
+    {
+        $lookup: {
+            from: "films",
+            localField: "_id",
+            foreignField: "_id",
+            as: "film"
+        }
+    },
+    {
+        $unwind: "$film"
+    },
+    {
+        $project: {
+            _id: 0,
+            name: "$film.title",
+            recette: 1
+        }
+    }
+])
