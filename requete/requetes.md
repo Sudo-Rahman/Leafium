@@ -1,11 +1,14 @@
-use leafium
+### Requête 1 : afficher le cinema UGC Ciné Cité Les Halles :
 
-// afficher le cinema UGC Ciné Cité Les Halles
+```js
 db.cinemas.find({
     "name": "UGC Ciné Cité Les Halles"
 })
+```
 
-// afficher le nombre de salle de chque cinema
+### Requête 2 : afficher le nombre de salle de chaque cinema
+
+```js
 db.cinemas.aggregate([{
     $project: {
         _id: 0,
@@ -15,8 +18,11 @@ db.cinemas.aggregate([{
         }
     }
 }])
+```
 
-// afficher le nombre de siege de chaque cinena
+### Requête 3 : afficher le nombre de siege de chaque cinena
+
+```js
 db.cinemas.aggregate([{
     $project: {
         _id: 0,
@@ -26,8 +32,11 @@ db.cinemas.aggregate([{
         }
     }
 }])
+```
 
-// afficher le nombre de diffusion de chaque cinema
+### Requête 4 :  afficher le nombre de diffusion de chaque cinema
+
+```js
 db.cinemas.aggregate([{
     $project: {
         _id: 0,
@@ -45,8 +54,11 @@ db.cinemas.aggregate([{
         }
     }
 }])
+```
 
-// afficher le nombre de ticket vendu par cinema
+### Requête 5 : afficher le nombre de ticket vendu par cinema
+
+```js
 db.cinemas.aggregate([{
     $project: {
         _id: 0,
@@ -64,8 +76,11 @@ db.cinemas.aggregate([{
         }
     }
 }])
+```
 
-// afficher le chiffre d'affaire de chaque cinema
+### Requête 6 : afficher le chiffre d'affaire de chaque cinema
+
+```js
 db.cinemas.aggregate([{
     $project: {
         _id: 0,
@@ -91,8 +106,11 @@ db.cinemas.aggregate([{
         }
     }
 }])
+```
 
-// afficher l'id du film ainsi que sa recette pour le film qui a fait le plus de recette
+### Requête 7 : afficher l'id du film ainsi que sa recette pour le film qui a fait le plus de recette
+
+```js
 db.cinemas.aggregate([
     {
         $project: {
@@ -163,3 +181,62 @@ db.cinemas.aggregate([
         }
     }
 ])
+```
+
+### Requête 8 : afficher les films qui ont une durée supérieur à 2h et qui sont dans les catégories "Fantasy" ou "Comédie"
+
+```js
+db.films.find({
+    duration: {$gt: 120}, categories: {$in: ["Fantasy", "Comédie"]}
+}, {
+    title: 1, duration: 1, categories: 1, "comments.rating": 1
+},).sort({duration: -1}).pretty()
+```
+
+### Requête 9 : mettre à jour le film "Gangs of New York" en ajoutant les catégories "Crime" et "Drama" et en modifiant
+
+sa description
+
+```js
+db.films.updateOne({title: "Gangs of New York"}, {
+    $set: {
+        categories: ["Crime", "Drama"],
+        description: "L'historie de la vie de Bill le Boucher, un chef de gang irlandais à New York dans les années 1860.",
+    },
+});
+```
+
+### Requête 10 : tous les films avec le réalisateur "George Lucas"
+
+```js
+db.films.find({directors: "George Lucas"}, {title: 1, _id: 0})
+```
+
+### Requête 11 : insérer un nouveau cinema avec une salle de 100 places
+
+```js
+db.cinemas.insertOne({
+    address: [
+        {
+            city: "Beaune",
+            number: 1,
+            street: "Rue de l'Arquebuse",
+            zipCode: "21200"
+        }
+    ],
+    name: "CGR Beaune",
+    rooms: [
+        {
+            name: "Salle 1",
+            capacity: 100,
+            broadcasts: []
+        }
+    ]
+})
+```
+
+### Requête 12 : supprimer tous les cinemas de Paris
+
+```js
+db.cinemas.deleteMany({"address.city": "Paris"})
+```

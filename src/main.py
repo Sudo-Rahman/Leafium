@@ -40,6 +40,7 @@ if __name__ == '__main__':
         db = connection()
         sleep(1)
     except Exception as e:
-        print("Server not available")
+        print("Serveur non disponible")
         exit(1)
+    print("Connexion réussie")
     db.populate(1000)
