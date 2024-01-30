@@ -85,14 +85,94 @@ commentaires_et_notes_de_films = [
 ]
 
 cinemas = [
-    {"name": "UGC Ciné Cité Les Halles", "address": "7 Place de la Rotonde, 75001 Paris"},
-    {"name": "Gaumont Opéra Capucines", "address": "2 Boulevard Montmartre, 75009 Paris"},
-    {"name": "Pathé Wepler", "address": "140 Boulevard de Clichy, 75018 Paris"},
-    {"name": "MK2 Bibliothèque", "address": "128-162 Avenue de France, 75013 Paris"},
-    {"name": "Le Grand Rex", "address": "1 Boulevard Poissonnière, 75002 Paris"},
-    {"name": "UGC Ciné Cité Bercy", "address": "2 Cour Saint-Émilion, 75012 Paris"},
-    {"name": "Pathé La Villette", "address": "30 Avenue Corentin Cariou, 75019 Paris"},
-    {"name": "Le Louxor - Palais du Cinéma", "address": "170 Boulevard de Magenta, 75010 Paris"},
-    {"name": "MK2 Quai de Seine", "address": "14 Quai de la Seine, 75019 Paris"},
-    {"name": "Cinéma des Cinéastes", "address": "7 Avenue de Clichy, 75017 Paris"}
+    {
+        "name": "UGC Ciné Cité Les Halles",
+        "address": {
+            "street": "Place de la Rotonde",
+            "number": 7,
+            "city": "Paris",
+            "zip": 75001
+        }
+    },
+    {
+        "name": "Gaumont Opéra Capucines",
+        "address": {
+            "street": "Boulevard Montmartre",
+            "number": 2,
+            "city": "Paris",
+            "zip": 75009
+        }
+    },
+    {
+        "name": "Pathé Wepler",
+        "address": {
+            "street": "Boulevard de Clichy",
+            "number": 140,
+            "city": "Paris",
+            "zip": 75018
+        }
+    },
+    {
+        "name": "MK2 Bibliothèque",
+        "address": {
+            "street": "Avenue de France",
+            "number": 128,
+            "city": "Paris",
+            "zip": 75013
+        }
+    },
+    {
+        "name": "Le Grand Rex",
+        "address": {
+            "street": "Boulevard Poissonnière",
+            "number": 1,
+            "city": "Paris",
+            "zip": 75002
+        }
+    },
+    {
+        "name": "UGC Ciné Cité Bercy",
+        "address": {
+            "street": "Cour Saint-Émilion",
+            "number": 2,
+            "city": "Paris",
+            "zip": 75012
+        }
+    },
+    {
+        "name": "Pathé La Villette",
+        "address": {
+            "street": "Avenue Corentin Cariou",
+            "number": 30,
+            "city": "Paris",
+            "zip": 75019
+        }
+    },
+    {
+        "name": "Le Louxor - Palais du Cinéma",
+        "address": {
+            "street": "Boulevard de Magenta",
+            "number": 170,
+            "city": "Paris",
+            "zip": 75010
+        }
+    },
+    {
+        "name": "MK2 Quai de Seine",
+        "address": {
+            "street": "Quai de la Seine",
+            "number": 14,
+            "city": "Paris",
+            "zip": 75019
+        }
+    },
+    {
+        "name": "Cinéma des Cinéastes",
+        "address": {
+            "street": "Avenue de Clichy",
+            "number": 7,
+            "city": "Paris",
+            "zip": 75017
+        }
+    }
 ]

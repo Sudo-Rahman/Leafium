@@ -12,7 +12,7 @@ class Database:
         if user and password:
             self.db.authenticate(user, password)
 
-    def populate(self, cinema: int, film: int):
+    def populate(self, film: int):
 
         for i in range(film):
             self.insert_film({
@@ -34,10 +34,10 @@ class Database:
 
         films_id_list = [film["_id"] for film in self.get_films({}, {"_id": 1})]
 
-        for i in range(cinema):
+        for cinama in cinemas:
             capacity = math.floor(random.random() * 500)
             self.insert_cinema({
-                **cinemas[math.floor(random.random() * len(cinemas))],
+                **cinama,
                 "rooms": [
                     {
                         "name": f"room{i}",
