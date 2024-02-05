@@ -26,7 +26,7 @@ users = [
     "Ava", "Sophia", "Isabella", "Mia", "Charlotte", "Abigail", "Emily", "Harper", "Amelia", "Evelyn", "Elizabeth",
     "Alice", "Bob", "Charlie", "David", "Eva", "Frank", "Grace", "Hector", "Isabel", "Jack", "Katherine", "Liam", "Mia",
     "Nathan", "Olivia", "Pablo", "Quinn", "Rachel", "Samuel", "Taylor", "Ulysses", "Victoria", "William", "Xavier",
-    "Yvonne", "Zachary"
+    "Yvonne", "Zachary", "Rahman", "Sofia", "Tariq", "Umar", "Vivian", "Walter", "Xena", "Yasmine", "Zara"
 ]
 
 titres_de_films = [
@@ -60,6 +60,40 @@ titres_de_films = [
     "La boite noire",
     "Le voyage de Chihiro",
     "Le loup de Wall Street",
+    "Le parrain",
+    "Le dernier empereur",
+    "Le dernier samouraï",
+    "Le dernier métro",
+    "Le dernier roi d'Écosse",
+    "Le dernier trappeur",
+    "Cars",
+    "Cars 2",
+    "Cars 3",
+    "Gare de Lyon",
+    "Interstellar",
+    "Inglorious Basterds",
+    "Inferno",
+    "Infernal Affairs",
+    "Rockie Vs Python",
+    "Rockie Vs Godzilla",
+    "Rockie Vs King Kong",
+    "Rockie Vs Alien",
+    "Rockie Vs Boa",
+    "Rockie Vs Anaconda",
+    "Gladiator",
+    "Iron Man",
+    "Spider Man",
+    "Batman",
+    "Super Man",
+    "WonderWoman",
+    "The Flash",
+    "Aquaman",
+    "Green Lantern",
+    "Black Panther",
+    "Captain America",
+    "Thor",
+    "Hulk",
+    "Doctor Strange"
 ]
 
 commentaires_et_notes_de_films = [
@@ -113,6 +147,25 @@ commentaires_et_notes_de_films = [
     {"content": "Un film qui plaira aux amateurs du genre.", "rating": 4},
     {"content": "Certains moments sont prévisibles, mais l'exécution est impeccable.", "rating": 4},
     {"content": "Un film qui explore des thèmes sociaux importants de manière saisissante.", "rating": 5},
+    {"content": "Les dialogues sont percutants et mémorables.", "rating": 5},
+    {"content": "Un film qui offre une perspective unique sur un sujet particulier.", "rating": 4},
+    {"content": "La cinématographie est superbe, chaque plan est soigneusement composé.", "rating": 5},
+    {"content": "Une expérience cinématographique qui mérite d'être partagée avec d'autres.", "rating": 4},
+    {"content": "Un chef-d'œuvre du genre [ajouter le genre du film].", "rating": 5},
+    {"content": "Un film qui vous fera réfléchir longtemps après sa visualisation.", "rating": 4},
+    {"content": "Une histoire émouvante qui vous fera verser des larmes.", "rating": 5},
+    {"content": "Les performances des acteurs sont exceptionnelles.", "rating": 4},
+    {"content": "L'intrigue est bien construite, avec des rebondissements inattendus.", "rating": 5},
+    {"content": "La réalisation est visuellement époustouflante.", "rating": 4},
+    {"content": "Une bande sonore qui ajoute beaucoup à l'expérience cinématographique.", "rating": 5},
+    {"content": "Des effets spéciaux incroyables qui immergent le spectateur dans un autre monde.", "rating": 4},
+    {"content": "Un mélange parfait d'action, de suspense et d'émotion.", "rating": 4},
+    {"content": "Le scénario est original et bien écrit.", "rating": 5},
+    {"content": "Un casting fantastique qui donne vie aux personnages.", "rating": 4},
+    {"content": "La direction artistique et les décors sont remarquables.", "rating": 5},
+    {"content": "Un film qui laisse une impression durable après sa visualisation.", "rating": 4},
+    {"content": "Une exploration intelligente de thèmes profonds et pertinents.", "rating": 5},
+    {"content": "Une comédie hilarante qui vous fait rire du début à la fin.", "rating": 4},
 
     {"content": "Ennuyeux du début à la fin, évitez-le !", "rating": 0},
     {"content": "Une histoire sans intérêt qui ne provoque aucune émotion.", "rating": 1},
@@ -152,7 +205,19 @@ commentaires_et_notes_de_films = [
     {"content": "La réalisation est bâclée, donnant l'impression d'un projet inachevé.", "rating": 2},
     {"content": "Le film souffre de nombreuses incohérences dans l'intrigue.", "rating": 1},
     {"content": "Les effets spéciaux sont datés et dépassés.", "rating": 2},
-    {"content": "Une expérience cinématographique décevante du début à la fin.", "rating": 1}
+    {"content": "Une expérience cinématographique décevante du début à la fin.", "rating": 1},
+    {"content": "Un film qui semble avoir été réalisé sans passion ni engagement.", "rating": 2},
+    {"content": "Les acteurs semblent peu convaincants dans leurs rôles.", "rating": 2},
+    {"content": "Les effets spéciaux laissent à désirer, rendant le film peu crédible.", "rating": 1},
+    {"content": "Un scénario prévisible avec des clichés maladroits.", "rating": 2},
+    {"content": "La bande sonore est décevante et ne s'aligne pas avec l'ambiance du film.", "rating": 1},
+    {"content": "Les dialogues sont plats et manquent d'originalité.", "rating": 2},
+    {"content": "L'ensemble du film manque d'émotion et de profondeur.", "rating": 1},
+    {"content": "Les personnages ne sont pas bien développés, laissant le spectateur indifférent.", "rating": 2},
+    {"content": "Les décors semblent artificiels, nuisant à l'immersion.", "rating": 1},
+    {"content": "Le rythme du film est trop lent, ce qui rend l'expérience ennuyeuse.", "rating": 2},
+    {"content": "Une tentative malheureuse d'apporter de l'originalité à un concept usé.", "rating": 1},
+    {"content": "Les twists dans l'intrigue sont prévisibles et décevants.", "rating": 2}
 ]
 
 # Liste des cinémas
@@ -245,6 +310,87 @@ cinemas = [
             "number": 7,
             "city": "Paris",
             "zip": 75017
+        }
+    },
+    {
+        "name": "Cinéma Le Balzac",
+        "address": {
+            "street": "Rue Balzac",
+            "number": 1,
+            "city": "Paris",
+            "zip": 75008
+        }
+    },
+    {
+        "name": "Cinéma Le Brady",
+        "address": {
+            "street": "Boulevard de Strasbourg",
+            "number": 39,
+            "city": "Paris",
+            "zip": 75010
+        }
+    },
+    {
+        "name": "Cinéma Le Champo",
+        "address": {
+            "street": "Rue des Écoles",
+            "number": 51,
+            "city": "Paris",
+            "zip": 75005
+        }
+    },
+    {
+        "name": "Cinéma Le Château d'Eau",
+        "address": {
+            "street": "Rue du Château d'Eau",
+            "number": 77,
+            "city": "Paris",
+            "zip": 75010
+        }
+    },
+    {
+        "name": "Cinéma Le Grand Action",
+        "address": {
+            "street": "Rue des Écoles",
+            "number": 5,
+            "city": "Paris",
+            "zip": 75005
+        }
+    },
+    {
+        "name": "Cinéma Le Louxor - Palais du Cinéma",
+        "address": {
+            "street": "Boulevard de Magenta",
+            "number": 170,
+            "city": "Paris",
+            "zip": 75010
+        }
+    },
+    {
+        "name": "Cinéma Le Nouveau Latina",
+        "address": {
+            "street": "Rue du Temple",
+            "number": 20,
+            "city": "Paris",
+            "zip": 75004
+        }
+    },
+    {
+        "name": "Cinéma Le Saint-André des Arts",
+        "address": {
+            "street": "Rue Saint-André des Arts",
+            "number": 30,
+            "city": "Paris",
+            "zip": 75006
+        }
+    },
+    {
+        "name": "Cinéma Le Saint-Germain des Prés",
+        "address": {
+            "street": "Rue Guillaume Apollinaire",
+            "number": 7,
+            "city": "Paris",
+            "zip": 75006
         }
     }
 ]

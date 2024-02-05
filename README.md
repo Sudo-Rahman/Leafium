@@ -27,6 +27,13 @@ un cinéma spécifique.
 
 - Gestion des Informations Cinématographiques : Stocker des données variées, telles que la description d'un film, les salles de diffusion, la durée de diffusion, le nombre d'entrées, etc.
 
+## Prérequis
+
+- Python >= 3.10
+- MongoDB >= 4.4
+- PyMongo >= 3.13.0
+- Matplotlib >= 3.4.3
+
 
 ## Auteurs
 
