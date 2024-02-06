@@ -71,248 +71,231 @@ class Database:
         print("Base de données vidée")
 
 
-def get(self, collection: str, query: dict = None, projection: dict = None):
-    if query is None:
-        query = {}
-    if projection is None:
-        projection = {}
-    return self.db[collection].find(query, projection)
+    def get(self, collection: str, query: dict = None, projection: dict = None):
+        if query is None:
+            query = {}
+        if projection is None:
+            projection = {}
+        return self.db[collection].find(query, projection)
 
+    def get_one(self, collection: str, query: dict = None, projection: dict = None):
+        if query is None:
+            query = {}
+        if projection is None:
+            projection = {}
+        return self.db[collection].find_one(query, projection)
 
-def get_one(self, collection: str, query: dict = None, projection: dict = None):
-    if query is None:
-        query = {}
-    if projection is None:
-        projection = {}
-    return self.db[collection].find_one(query, projection)
+    def get_films(self, query: dict = None, projection: dict = None):
+        return self.get("films", query, projection)
 
+    def get_cinemas(self, query: dict = None, projection: dict = None):
+        return self.get("cinemas", query, projection)
 
-def get_films(self, query: dict = None, projection: dict = None):
-    return self.get("films", query, projection)
+    def get_film(self, query: dict = None, projection: dict = None):
+        return self.get_one("films", query, projection)
 
+    def get_cinema(self, query: dict = None, projection: dict = None):
+        return self.get_one("cinemas", query, projection)
 
-def get_cinemas(self, query: dict = None, projection: dict = None):
-    return self.get("cinemas", query, projection)
+    def insert(self, collection: str, document: dict):
+        return self.db[collection].insert_one(document)
 
+    def insert_many(self, collection: str, documents: list):
+        return self.db[collection].insert_many(documents)
 
-def get_film(self, query: dict = None, projection: dict = None):
-    return self.get_one("films", query, projection)
+    def update(self, collection: str, query: dict, update: dict):
+        return self.db[collection].update_one(query, update)
 
+    def insert_film(self, film: dict):
+        return self.insert("films", film)
 
-def get_cinema(self, query: dict = None, projection: dict = None):
-    return self.get_one("cinemas", query, projection)
+    def insert_films(self, films: list):
+        return self.insert_many("films", films)
 
+    def insert_cinema(self, cinema: dict):
+        return self.insert("cinemas", cinema)
 
-def insert(self, collection: str, document: dict):
-    return self.db[collection].insert_one(document)
+    def insert_cinemas(self, cinemas: list):
+        return self.insert_many("cinemas", cinemas)
 
+    # FONTION DE REQUETAGE
 
-def insert_many(self, collection: str, documents: list):
-    return self.db[collection].insert_many(documents)
+    def get_average_rating_by_movie(self, limit: int):
+        """
+        Récupère la moyenne des notes des films.
+        :param self:
+        :param limit: Le nombre de films à afficher.
+        :return:
+        """
+        try:
+            if self.db is None:
+                raise ValueError("Erreur de connexion à la base de données")
 
+            pipeline = [
+                {"$unwind": "$comments"},
+                {"$group": {"_id": "$_id", "title": {"$first": "$title"},
+                            "average_rating": {"$avg": "$comments.rating"}}},
+                {"$sort": {"average_rating": -1}},
+                {"$limit": limit + 1}
+            ]
 
-def update(self, collection: str, query: dict, update: dict):
-    return self.db[collection].update_one(query, update)
+            data = list(self.db["films"].aggregate(pipeline))
+            titles = [movie['title'] for movie in data]
+            ratings = [movie['average_rating'] for movie in data]
 
+            plt.figure(figsize=(12, 8))
+            plt.bar(titles, ratings, color='skyblue', edgecolor='black', linewidth=1.2)
+            plt.xlabel('Nom des films', fontsize=14)
+            plt.ylabel('Moyenne des notes', fontsize=14)
+            plt.title(f'Top des {limit} films', fontsize=16)
+            plt.xticks(rotation=45, ha='right', fontsize=12)
+            plt.yticks(fontsize=12)
+            plt.grid(axis='y', linestyle='--', alpha=0.7)
+            plt.tight_layout()
+            plt.show()
 
-def insert_film(self, film: dict):
-    return self.insert("films", film)
+        except Exception as e:
+            print(f"Erreur lors de la récupération des données: {e}")
+            return None
 
+    def get_movie_by_category(self, category: str):
+        """
+        Récupère les films de la catégorie donnée.
+        :param self:
+        :param category: Le nom de la catégorie.
+        :return:
+        """
+        try:
+            if self.db is None:
+                raise ValueError("Erreur de connexion à la base de données")
 
-def insert_films(self, films: list):
-    return self.insert_many("films", films)
+            pipeline = [
+                {"$match": {"categories": category}},
+                {"$project": {"title": 1, "categories": 1}},
+                {"$sort": {"title": 1}},
+                {"$limit": 10}
+            ]
 
+            data = list(self.db["films"].aggregate(pipeline))
+            titles = [movie['title'] for movie in data]
+            categories = [movie['categories'] for movie in data]
+            print("Les films de la catégorie", category, "sont:")
+            for i in range(len(titles)):
+                title = f"\033[92m{titles[i]}\033[0m"
+                category_text = f"{'catégories' if len(categories[i]) > 1 else 'catégorie'}"
+                category = f"\033[94m{', '.join(categories[i])}\033[0m"
+                print(f"{title} avec comme {category_text} {category}")
 
-def insert_cinema(self, cinema: dict):
-    return self.insert("cinemas", cinema)
+        except Exception as e:
+            print(f"Erreur lors de la récupération des données: {e}")
+            return None
 
+    def get_movie_by_director(self, director: str):
+        """
+        Récupère les films réalisés par un réalisateur donné.
+        :param self:
+        :param director: Le nom du réalisateur.
+        :return: Les films réalisés par le réalisateur donné.
+        """
 
-def insert_cinemas(self, cinemas: list):
-    return self.insert_many("cinemas", cinemas)
+        try:
+            if self.db is None:
+                raise ValueError("Erreur de connexion à la base de données")
 
+            pipeline = [
+                {"$match": {"directors": director}},
+                {"$project": {"title": 1, "directors": 1}},
+                {"$sort": {"title": 1}}
+            ]
 
-# FONTION DE REQUETAGE
+            data = list(self.db["films"].aggregate(pipeline))
+            titles = [movie['title'] for movie in data]
+            directors = [movie['directors'] for movie in data]
+            print("Les films du réalisateur", director, "sont:")
+            for i in range(len(titles)):
+                title = f"\033[92m{titles[i]}\033[0m"
+                director_text = f"{'réalisateurs' if len(directors[i]) > 1 else 'réalisateur'}"
+                director = f"\033[94m{', '.join(directors[i])}\033[0m"
+                print(f"{title} avec comme {director_text} {director}")
 
-def get_average_rating_by_movie(self, limit: int):
-    """
-    Récupère la moyenne des notes des films.
-    :param self:
-    :param limit: Le nombre de films à afficher.
-    :return:
-    """
-    try:
-        if self.db is None:
-            raise ValueError("Erreur de connexion à la base de données")
+        except Exception as e:
+            print(f"Erreur lors de la récupération des données: {e}")
+            return None
 
-        pipeline = [
-            {"$unwind": "$comments"},
-            {"$group": {"_id": "$_id", "title": {"$first": "$title"},
-                        "average_rating": {"$avg": "$comments.rating"}}},
-            {"$sort": {"average_rating": -1}},
-            {"$limit": limit + 1}
-        ]
+    def get_total_tickets_sold(self):
+        """
+        Récupère le nombre total de tickets vendus.
+        :param self:
+        :return:
+        """
 
-        data = list(self.db["films"].aggregate(pipeline))
-        titles = [movie['title'] for movie in data]
-        ratings = [movie['average_rating'] for movie in data]
+        try:
+            if self.db is None:
+                raise ValueError("Erreur de connexion à la base de données")
+            pipeline = [
+                {"$unwind": "$rooms"},
+                {"$unwind": "$rooms.broadcasts"},
+                {"$group": {"_id": 'Max', "total_tickets_sold": {"$sum": "$rooms.broadcasts.ticket_sold"}}}
+            ]
+            data = list(self.db["cinemas"].aggregate(pipeline))
+            total_tickets_sold = data[0]['total_tickets_sold']
+            # print(f"Le nombre total de tickets vendus est de \033[92m{total_tickets_sold}\033[0m")
+            return total_tickets_sold
 
-        plt.figure(figsize=(12, 8))
-        plt.bar(titles, ratings, color='skyblue', edgecolor='black', linewidth=1.2)
-        plt.xlabel('Nom des films', fontsize=14)
-        plt.ylabel('Moyenne des notes', fontsize=14)
-        plt.title(f'Top des {limit} films', fontsize=16)
-        plt.xticks(rotation=45, ha='right', fontsize=12)
-        plt.yticks(fontsize=12)
-        plt.grid(axis='y', linestyle='--', alpha=0.7)
-        plt.tight_layout()
-        plt.show()
+        except Exception as e:
+            print(f"Erreur lors de la récupération des données: {e}")
+            return None
 
-    except Exception as e:
-        print(f"Erreur lors de la récupération des données: {e}")
-        return None
+    def get_top_movies_by_tickets_sold(self, limit: int):
+        """
+        Récupère les films ayant vendu le plus de tickets.
+        :param self:
+        :param limit:
+        :return:
+        """
+        try:
+            if self.db is None:
+                raise ValueError("Erreur de connexion à la base de données")
 
+            pipeline = [
+                {"$unwind": "$rooms"},
+                {"$unwind": "$rooms.broadcasts"},
+                {"$group": {"_id": "$rooms.broadcasts._id_film",
+                            "total_tickets_sold": {"$sum": "$rooms.broadcasts.ticket_sold"}}},
+                {"$lookup": {
+                    "from": "films",
+                    "localField": "_id",
+                    "foreignField": "_id",
+                    "as": "film_details"
+                }},
+                {"$unwind": "$film_details"},
+                {"$project": {
+                    "_id": 0,
+                    "title": "$film_details.title",
+                    "total_tickets_sold": 1
+                }},
+                {"$sort": {"total_tickets_sold": -1}},
+                {"$limit": limit}
+            ]
 
-def get_movie_by_category(self, category: str):
-    """
-    Récupère les films de la catégorie donnée.
-    :param self:
-    :param category: Le nom de la catégorie.
-    :return:
-    """
-    try:
-        if self.db is None:
-            raise ValueError("Erreur de connexion à la base de données")
+            data = list(self.db["cinemas"].aggregate(pipeline))
+            titles = [movie['title'] for movie in data]
+            tickets_sold = [movie['total_tickets_sold'] for movie in data]
+            print(f"Les {limit} films ayant vendu le plus de tickets sont:")
+            for i in range(len(titles)):
+                title = f"\033[92m{titles[i]}\033[0m"
+                tickets_sold_text = f"{'tickets vendus' if tickets_sold[i] > 1 else 'ticket vendu'}"
+                tickets_sold_number = f"\033[94m{tickets_sold[i]}\033[0m"
+                print(f"{title} avec \033[94m{tickets_sold[i]}\033[0m {tickets_sold_text}")
+            sum_tickets_sold = sum(tickets_sold)
+            total_tickets_sold = self.get_total_tickets_sold()
+            title_string = "Diagramme des parts de marché des " + str(total_tickets_sold) + " tickets vendus"
+            valeurs = tickets_sold + [self.get_total_tickets_sold() - sum_tickets_sold]
+            etiquettes = titles + ['Autres']
+            plt.pie(valeurs, labels=etiquettes, autopct='%1.1f%%', startangle=90)
+            plt.title(title_string)
+            plt.show()
 
-        pipeline = [
-            {"$match": {"categories": category}},
-            {"$project": {"title": 1, "categories": 1}},
-            {"$sort": {"title": 1}},
-            {"$limit": 10}
-        ]
-
-        data = list(self.db["films"].aggregate(pipeline))
-        titles = [movie['title'] for movie in data]
-        categories = [movie['categories'] for movie in data]
-        print("Les films de la catégorie", category, "sont:")
-        for i in range(len(titles)):
-            title = f"\033[92m{titles[i]}\033[0m"
-            category_text = f"{'catégories' if len(categories[i]) > 1 else 'catégorie'}"
-            category = f"\033[94m{', '.join(categories[i])}\033[0m"
-            print(f"{title} avec comme {category_text} {category}")
-
-    except Exception as e:
-        print(f"Erreur lors de la récupération des données: {e}")
-        return None
-
-
-def get_movie_by_director(self, director: str):
-    """
-    Récupère les films réalisés par un réalisateur donné.
-    :param self:
-    :param director: Le nom du réalisateur.
-    :return: Les films réalisés par le réalisateur donné.
-    """
-
-    try:
-        if self.db is None:
-            raise ValueError("Erreur de connexion à la base de données")
-
-        pipeline = [
-            {"$match": {"directors": director}},
-            {"$project": {"title": 1, "directors": 1}},
-            {"$sort": {"title": 1}}
-        ]
-
-        data = list(self.db["films"].aggregate(pipeline))
-        titles = [movie['title'] for movie in data]
-        directors = [movie['directors'] for movie in data]
-        print("Les films du réalisateur", director, "sont:")
-        for i in range(len(titles)):
-            title = f"\033[92m{titles[i]}\033[0m"
-            director_text = f"{'réalisateurs' if len(directors[i]) > 1 else 'réalisateur'}"
-            director = f"\033[94m{', '.join(directors[i])}\033[0m"
-            print(f"{title} avec comme {director_text} {director}")
-
-    except Exception as e:
-        print(f"Erreur lors de la récupération des données: {e}")
-        return None
-
-
-def get_total_tickets_sold(self):
-    """
-    Récupère le nombre total de tickets vendus.
-    :param self:
-    :return:
-    """
-
-    try:
-        if self.db is None:
-            raise ValueError("Erreur de connexion à la base de données")
-        pipeline = [
-            {"$unwind": "$rooms"},
-            {"$unwind": "$rooms.broadcasts"},
-            {"$group": {"_id": 'Max', "total_tickets_sold": {"$sum": "$rooms.broadcasts.ticket_sold"}}}
-        ]
-        data = list(self.db["cinemas"].aggregate(pipeline))
-        total_tickets_sold = data[0]['total_tickets_sold']
-        # print(f"Le nombre total de tickets vendus est de \033[92m{total_tickets_sold}\033[0m")
-        return total_tickets_sold
-
-    except Exception as e:
-        print(f"Erreur lors de la récupération des données: {e}")
-        return None
-
-
-def get_top_movies_by_tickets_sold(self, limit: int):
-    """
-    Récupère les films ayant vendu le plus de tickets.
-    :param self:
-    :param limit:
-    :return:
-    """
-    try:
-        if self.db is None:
-            raise ValueError("Erreur de connexion à la base de données")
-
-        pipeline = [
-            {"$unwind": "$rooms"},
-            {"$unwind": "$rooms.broadcasts"},
-            {"$group": {"_id": "$rooms.broadcasts._id_film",
-                        "total_tickets_sold": {"$sum": "$rooms.broadcasts.ticket_sold"}}},
-            {"$lookup": {
-                "from": "films",
-                "localField": "_id",
-                "foreignField": "_id",
-                "as": "film_details"
-            }},
-            {"$unwind": "$film_details"},
-            {"$project": {
-                "_id": 0,
-                "title": "$film_details.title",
-                "total_tickets_sold": 1
-            }},
-            {"$sort": {"total_tickets_sold": -1}},
-            {"$limit": limit}
-        ]
-
-        data = list(self.db["cinemas"].aggregate(pipeline))
-        titles = [movie['title'] for movie in data]
-        tickets_sold = [movie['total_tickets_sold'] for movie in data]
-        print(f"Les {limit} films ayant vendu le plus de tickets sont:")
-        for i in range(len(titles)):
-            title = f"\033[92m{titles[i]}\033[0m"
-            tickets_sold_text = f"{'tickets vendus' if tickets_sold[i] > 1 else 'ticket vendu'}"
-            tickets_sold_number = f"\033[94m{tickets_sold[i]}\033[0m"
-            print(f"{title} avec \033[94m{tickets_sold[i]}\033[0m {tickets_sold_text}")
-        sum_tickets_sold = sum(tickets_sold)
-        total_tickets_sold = self.get_total_tickets_sold()
-        title_string = "Diagramme des parts de marché des " + str(total_tickets_sold) + " tickets vendus"
-        valeurs = tickets_sold + [self.get_total_tickets_sold() - sum_tickets_sold]
-        etiquettes = titles + ['Autres']
-        plt.pie(valeurs, labels=etiquettes, autopct='%1.1f%%', startangle=90)
-        plt.title(title_string)
-        plt.show()
-
-    except Exception as e:
-        print(f"Erreur lors de la récupération des données: {e}")
-        return None
+        except Exception as e:
+            print(f"Erreur lors de la récupération des données: {e}")
+            return None
