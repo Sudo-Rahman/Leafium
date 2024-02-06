@@ -4,6 +4,12 @@
   <img src="https://github.com/Sudo-Rahman/Leafium/blob/main/documentation/img/logo.png" width="150px" height="150px" alt="Logo">
 </p>
 
+<p align="center">
+  <img width="250px" height="250px" src="https://github.com/Sudo-Rahman/Leafium/blob/main/documentation/img/Figure_1.png" alt="F1" />
+  <img width="250px" height="250px" src="https://github.com/Sudo-Rahman/Leafium/blob/main/documentation/img/Figure_2.png" alt="F2" />
+  <img width="250px" height="250px" src="https://github.com/Sudo-Rahman/Leafium/blob/main/documentation/img/Figure_3.png" alt="F3" />
+</p>
+
 Ce projet a pour objectif le développement d'une base de données 
 MongoDB et d'un ensemble de fonctionnalités permettant de réaliser une 
 analyse décisionnelle centrée sur les films de cinéma. L'implémentation se base 
