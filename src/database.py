@@ -8,10 +8,22 @@ from data import *
 
 
 class Database:
+
     def __init__(self, host: str, port: int, database: str, user: str = None, password: str = None):
-        self.db = pymongo.MongoClient(host, port)[database]
-        if user and password:
-            self.db.authenticate(user, password)
+
+        self.host = host
+        self.port = port
+        self.database = database
+        self.user = user
+        self.password = password
+
+        if host == "mongo2.iem":
+            self.db = pymongo.MongoClient(host, port, username="mc150904", password="mc150904", authSource="mc150904",
+                                          authMechanism="SCRAM-SHA-1")[database]
+        else:
+            self.db = pymongo.MongoClient(host, port)[database]
+            if user and password:
+                self.db.authenticate(user, password)
 
     def populate(self, film: int):
         """
@@ -64,12 +76,15 @@ class Database:
         """
         Permet de vider la base de données.
         :param self:
-        :return:
+        :return: None
         """
         self.db["films"].delete_many({})
         self.db["cinemas"].delete_many({})
         print("Base de données vidée")
 
+    ##########################
+    #    FONCTIONS DE BASE   #
+    ##########################
 
     def get(self, collection: str, query: dict = None, projection: dict = None):
         if query is None:
@@ -118,14 +133,16 @@ class Database:
     def insert_cinemas(self, cinemas: list):
         return self.insert_many("cinemas", cinemas)
 
-    # FONTION DE REQUETAGE
+    ##########################
+    # FONCTIONS DE REQUÊTES  #
+    ##########################
 
     def get_average_rating_by_movie(self, limit: int):
         """
         Récupère la moyenne des notes des films.
         :param self:
         :param limit: Le nombre de films à afficher.
-        :return:
+        :return: La moyenne des notes des films.
         """
         try:
             if self.db is None:
@@ -163,7 +180,7 @@ class Database:
         Récupère les films de la catégorie donnée.
         :param self:
         :param category: Le nom de la catégorie.
-        :return:
+        :return: Les films de la catégorie donnée.
         """
         try:
             if self.db is None:
@@ -226,7 +243,7 @@ class Database:
         """
         Récupère le nombre total de tickets vendus.
         :param self:
-        :return:
+        :return: Le nombre total de tickets vendus.
         """
 
         try:
@@ -294,6 +311,111 @@ class Database:
             etiquettes = titles + ['Autres']
             plt.pie(valeurs, labels=etiquettes, autopct='%1.1f%%', startangle=90)
             plt.title(title_string)
+            plt.show()
+
+        except Exception as e:
+            print(f"Erreur lors de la récupération des données: {e}")
+            return None
+
+    def get_top_cinema_by_tickets_sold(self, limit: int):
+        """
+        Récupère les cinémas ayant vendu le plus de tickets.
+        :param self:
+        :param limit: Le nombre de cinémas à afficher.
+        :return: Les cinémas ayant vendu le plus de tickets.
+        """
+        try:
+            if self.db is None:
+                raise ValueError("Erreur de connexion à la base de données")
+
+            pipeline = [
+                {"$unwind": "$rooms"},
+                {"$unwind": "$rooms.broadcasts"},
+                {"$group": {"_id": "$_id",
+                            "name": {"$first": "$name"},
+                            "total_tickets_sold": {"$sum": "$rooms.broadcasts.ticket_sold"}}},
+                {"$project": {
+                    "_id": 0,
+                    "name": 1,
+                    "total_tickets_sold": 1
+                }},
+                {"$sort": {"total_tickets_sold": -1}},
+                {"$limit": limit}
+            ]
+
+            data = list(self.db["cinemas"].aggregate(pipeline))
+            names = [cinema['name'] for cinema in data]
+            tickets_sold = [cinema['total_tickets_sold'] for cinema in data]
+            print(f"Les {limit} cinémas ayant vendu le plus de tickets sont:")
+            for i in range(len(names)):
+                name = f"\033[92m{names[i]}\033[0m"
+                tickets_sold_text = f"{'tickets vendus' if tickets_sold[i] > 1 else 'ticket vendu'}"
+                print(f"{name} avec \033[94m{tickets_sold[i]}\033[0m {tickets_sold_text}")
+
+            sum_tickets_sold = sum(tickets_sold)
+            total_tickets_sold = self.get_total_tickets_sold()
+            title_string = "Diagramme des parts de marché des " + str(total_tickets_sold) + " tickets vendus"
+            valeurs = tickets_sold + [self.get_total_tickets_sold() - sum_tickets_sold]
+            etiquettes = names + ['Autres']
+            plt.pie(valeurs, labels=etiquettes, autopct='%1.1f%%', startangle=90)
+            plt.title(title_string)
+            plt.show()
+
+        except Exception as e:
+            print(f"Erreur lors de la récupération des données: {e}")
+            return None
+
+    def get_movie_name_under_price(self, price: int, limit: int):
+        """
+        Récupère les films dont le prix est inférieur à celui donné.
+        :param self:
+        :param limit: Le nombre de films à afficher.
+        :param price: Le prix maximum.
+        :return: Les films dont le prix est inférieur à celui donné.
+        """
+        try:
+            if self.db is None:
+                raise ValueError("Erreur de connexion à la base de données")
+
+            pipeline = [
+                {"$unwind": "$rooms"},
+                {"$unwind": "$rooms.broadcasts"},
+                {"$match": {"rooms.broadcasts.price": {"$lt": price}}},
+                {"$group": {"_id": "$rooms.broadcasts._id_film", "prix": {"$first": "$rooms.broadcasts.price"}}},
+                {"$lookup": {
+                    "from": "films",
+                    "localField": "_id",
+                    "foreignField": "_id",
+                    "as": "film_details"
+                }},
+                {"$unwind": "$film_details"},
+                {"$project": {
+                    "_id": 0,
+                    "title": "$film_details.title",
+                    "prix": 1
+                }},
+                {"$sort": {"prix": -1}},
+                {"$limit": limit}
+            ]
+
+            data = list(self.db["cinemas"].aggregate(pipeline))
+            titles = [movie['title'] for movie in data]
+            prices = [movie['prix'] for movie in data]
+            print(f"Les {limit} films dont le prix est inférieur à \033[92m{price}$\033[0m sont:\033[0m")
+            for i in range(len(titles)):
+                title = f"\033[92m{titles[i]}\033[0m"
+                price_text = f"{'prix' if prices[i] > 1 else 'prix'}"
+                print(f"{title} avec un \033[94m{prices[i]}$\033[0m {price_text}")
+
+            plt.figure(figsize=(12, 8))
+            plt.bar(titles, prices, color='skyblue', edgecolor='black', linewidth=1.2)
+            plt.xlabel('Nom des films', fontsize=14)
+            plt.ylabel('Prix', fontsize=14)
+            plt.title(f'Top des {limit} films dont le prix est inférieur à {price}$', fontsize=16)
+            plt.xticks(rotation=45, ha='right', fontsize=12)
+            plt.yticks(fontsize=12)
+            plt.grid(axis='y', linestyle='--', alpha=0.7)
+            plt.tight_layout()
             plt.show()
 
         except Exception as e:
