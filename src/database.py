@@ -1,11 +1,11 @@
 import math
 import random
+from time import sleep
 
 import matplotlib.pyplot as plt
 import pymongo
 
 from data import *
-
 
 class Database:
 
@@ -16,6 +16,7 @@ class Database:
         self.database = database
         self.user = user
         self.password = password
+        self.db = None
 
         if host == "mongo2.iem":
             self.db = pymongo.MongoClient(host, port, username="mc150904", password="mc150904", authSource="mc150904",
@@ -25,19 +26,191 @@ class Database:
             if user and password:
                 self.db.authenticate(user, password)
 
+    def create_collection_cinemas(self):
+        """
+        Crée la collection cinemas.
+        :param self:
+        :return: None
+        """
+        self.db.create_collection("cinemas", validator={
+            "$jsonSchema": {
+                "bsonType": "object",
+                "required": ["name", "address", "rooms"],
+                "properties": {
+                    "name": {
+                        "bsonType": "string",
+                        "description": "Nom du cinéma"
+                    },
+                    "address": {
+                        "bsonType": "object",
+                        "required": ["city", "number", "street", "zip"],
+                        "properties": {
+                            "city": {
+                                "bsonType": "string",
+                                "description": "Ville"
+                            },
+                            "number": {
+                                "bsonType": "int",
+                                "description": "Numéro"
+                            },
+                            "street": {
+                                "bsonType": "string",
+                                "description": "Rue"
+                            },
+                            "zip": {
+                                "bsonType": "int",
+                                "description": "Code postal"
+                            }
+                        }
+                    },
+                    "rooms": {
+                        "bsonType": "array",
+                        "description": "Salles",
+                        "items": {
+                            "bsonType": "object",
+                            "required": ["name", "capacity", "broadcasts"],
+                            "properties": {
+                                "name": {
+                                    "bsonType": "string",
+                                    "description": "Nom de la salle"
+                                },
+                                "capacity": {
+                                    "bsonType": "int",
+                                    "description": "Capacité de la salle"
+                                },
+                                "broadcasts": {
+                                    "bsonType": "array",
+                                    "description": "Diffusions",
+                                    "items": {
+                                        "bsonType": "object",
+                                        "required": ["_id_film", "date_broadcast", "price", "ticket_sold"],
+                                        "properties": {
+                                            "_id_film": {
+                                                "bsonType": "objectId",
+                                                "description": "ID du film"
+                                            },
+                                            "date_broadcast": {
+                                                "bsonType": "string",
+                                                "description": "Date de diffusion"
+                                            },
+                                            "price": {
+                                                "bsonType": "int",
+                                                "description": "Prix de la place"
+                                            },
+                                            "ticket_sold": {
+                                                "bsonType": "int",
+                                                "description": "Nombre de tickets vendus"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+    def create_collection_films(self):
+        """
+        Crée la collection films.
+        :param self:
+        :return: None
+        """
+        self.db.create_collection("films", validator={
+            "$jsonSchema": {
+                "bsonType": "object",
+                "required": ["release_date", "title", "duration", "description", "directors", "categories", "comments"],
+                "properties": {
+                    "release_date": {
+                        "bsonType": "string",
+                        "description": "Date de sortie"
+                    },
+                    "title": {
+                        "bsonType": "string",
+                        "description": "Titre du film"
+                    },
+                    "duration": {
+                        "bsonType": "int",
+                        "description": "Durée du film"
+                    },
+                    "description": {
+                        "bsonType": "string",
+                        "description": "Description du film"
+                    },
+                    "directors": {
+                        "bsonType": "array",
+                        "description": "Réalisateurs",
+                        "items": {
+                            "bsonType": "string",
+                            "description": "Nom du réalisateur"
+                        }
+                    },
+                    "categories": {
+                        "bsonType": "array",
+                        "description": "Catégories",
+                        "items": {
+                            "bsonType": "string",
+                            "description": "Nom de la catégorie"
+                        }
+                    },
+                    "comments": {
+                        "bsonType": "array",
+                        "description": "Commentaires",
+                        "items": {
+                            "bsonType": "object",
+                            "required": ["author", "content", "rating"],
+                            "properties": {
+                                "author": {
+                                    "bsonType": "string",
+                                    "description": "Auteur du commentaire"
+                                },
+                                "content": {
+                                    "bsonType": "string",
+                                    "description": "Commentaire"
+                                },
+                                "rating": {
+                                    "bsonType": "int",
+                                    "description": "Note du film"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+    def drop_collection(self):
+        """
+        Permet de supprimer une collection.
+        :param self:
+        :return: None
+        """
+        self.db["films"].drop()
+        self.db["cinemas"].drop()
+        print("Collection supprimée")
+
     def populate(self, film: int):
         """
         Permet de peupler la base de données avec des films et des cinémas.
         :param film: Nombre de films à insérer
         :return: None
         """
+        # Création des collections films et cinemas
+        list_collection_names = self.db.list_collection_names()
+        if not ("films" in list_collection_names and "cinemas" in list_collection_names):
+            self.create_collection_cinemas()
+            self.create_collection_films()
+            sleep(1)
+
         for i in range(film):
             self.insert_film({
                 "release_date": f"20{math.floor(random.random() * 24)}-01-01",
                 "title": titres_de_films[math.floor(random.random() * len(titres_de_films))],
                 "duration": math.floor(random.random() * 100) + 60,
                 "description": ''.join(random.choice('abcdefghijklmnopqrstuvyxyz') for _ in range(100)),
-                "directors": [realisateurs_de_films[math.floor(random.random() * len(realisateurs_de_films))] for _ in
+                "directors": [realisateurs_de_films[math.floor(random.random() * len(realisateurs_de_films))] for _
+                              in
                               range(math.floor(random.random() * 3))],
                 "categories": [genres_de_films[math.floor(random.random() * len(genres_de_films))] for _ in
                                range(math.floor(random.random() * 10))],
