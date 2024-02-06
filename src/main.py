@@ -40,14 +40,14 @@ if __name__ == '__main__':
     try:
         db = connection()
         sleep(1)
-        print("\033[92m***Connexion réussie à", db.host, "sur le port", db.port, "en tant que", db.user, "***\033[97m")
+        print("\033[92m*** Connexion réussie à", db.host, "sur le port", db.port, "en tant que", db.user, "***\033[97m")
         # db.populate(10)
         # db.get_average_rating_by_movie(5)
         # db.get_movie_by_category("Action")
         # db.get_movie_by_director("Steven Spielberg")
-        db.get_top_movies_by_tickets_sold(5)
-        db.get_top_cinema_by_tickets_sold(5)
-        db.get_movie_name_under_price(10, 5)
+        # db.get_top_movies_by_tickets_sold(5)
+        # db.get_top_cinema_by_tickets_sold(5)
+        db.get_movie_name_under_price(10, 20)
     except Exception as e:
         print("\033[91mServeur non disponible\033[97m ->", e)
         exit(1)

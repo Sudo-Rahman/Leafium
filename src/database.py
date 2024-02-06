@@ -76,11 +76,15 @@ class Database:
         """
         Permet de vider la base de données.
         :param self:
-        :return:
+        :return: None
         """
         self.db["films"].delete_many({})
         self.db["cinemas"].delete_many({})
         print("Base de données vidée")
+
+    ##########################
+    #    FONCTIONS DE BASE   #
+    ##########################
 
     def get(self, collection: str, query: dict = None, projection: dict = None):
         if query is None:
@@ -129,14 +133,16 @@ class Database:
     def insert_cinemas(self, cinemas: list):
         return self.insert_many("cinemas", cinemas)
 
-    # FONTION DE REQUETAGE
+    ##########################
+    # FONCTIONS DE REQUÊTES  #
+    ##########################
 
     def get_average_rating_by_movie(self, limit: int):
         """
         Récupère la moyenne des notes des films.
         :param self:
         :param limit: Le nombre de films à afficher.
-        :return:
+        :return: La moyenne des notes des films.
         """
         try:
             if self.db is None:
@@ -174,7 +180,7 @@ class Database:
         Récupère les films de la catégorie donnée.
         :param self:
         :param category: Le nom de la catégorie.
-        :return:
+        :return: Les films de la catégorie donnée.
         """
         try:
             if self.db is None:
@@ -395,11 +401,11 @@ class Database:
             data = list(self.db["cinemas"].aggregate(pipeline))
             titles = [movie['title'] for movie in data]
             prices = [movie['prix'] for movie in data]
-            print(f"Les {limit} films dont le prix est inférieur à \033[92m{price}\033[0m$ sont:")
+            print(f"Les {limit} films dont le prix est inférieur à \033[92m{price}$\033[0m sont:\033[0m")
             for i in range(len(titles)):
                 title = f"\033[92m{titles[i]}\033[0m"
                 price_text = f"{'prix' if prices[i] > 1 else 'prix'}"
-                print(f"{title} avec un \033[94m{prices[i]}\033[0m {price_text}")
+                print(f"{title} avec un \033[94m{prices[i]}$\033[0m {price_text}")
 
             plt.figure(figsize=(12, 8))
             plt.bar(titles, prices, color='skyblue', edgecolor='black', linewidth=1.2)
