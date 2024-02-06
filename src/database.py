@@ -8,10 +8,22 @@ from data import *
 
 
 class Database:
+
     def __init__(self, host: str, port: int, database: str, user: str = None, password: str = None):
-        self.db = pymongo.MongoClient(host, port)[database]
-        if user and password:
-            self.db.authenticate(user, password)
+
+        self.host = host
+        self.port = port
+        self.database = database
+        self.user = user
+        self.password = password
+
+        if host == "mongo2.iem":
+            self.db = pymongo.MongoClient(host, port, username="mc150904", password="mc150904", authSource="mc150904",
+                                          authMechanism="SCRAM-SHA-1")[database]
+        else:
+            self.db = pymongo.MongoClient(host, port)[database]
+            if user and password:
+                self.db.authenticate(user, password)
 
     def populate(self, film: int):
         """
@@ -69,7 +81,6 @@ class Database:
         self.db["films"].delete_many({})
         self.db["cinemas"].delete_many({})
         print("Base de données vidée")
-
 
     def get(self, collection: str, query: dict = None, projection: dict = None):
         if query is None:
