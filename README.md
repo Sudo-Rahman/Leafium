@@ -1,4 +1,4 @@
-# Leafium
+<h1 align="center">Leafium</h1> 
 
 <p align="center">
   <img src="https://github.com/Sudo-Rahman/Leafium/blob/main/documentation/img/logo.png" width="150px" height="150px" alt="Logo">
@@ -40,6 +40,13 @@ un cinéma spécifique.
 - PyMongo >= 3.13.0
 - Matplotlib >= 3.4.3
 
+## Exécution
+
+Pour lancer le script python : 
+
+```bash
+python3 main.py
+```
 
 ## Auteurs
 
