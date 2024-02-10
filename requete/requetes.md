@@ -3,7 +3,7 @@
 ```js
 db.cinemas.find({
     "name": "UGC Ciné Cité Les Halles"
-})
+}).pretty()
 ```
 
 ### Requête 2 : afficher le nombre de salle de chaque cinema
@@ -212,23 +212,21 @@ db.films.updateOne({title: "Gangs of New York"}, {
 db.films.find({directors: "George Lucas"}, {title: 1, _id: 0})
 ```
 
-### Requête 11 : insérer un nouveau cinema avec une salle de 100 places
+### Requête 11 : insérer un nouveau cinema à Beaune avec une salle de 200 places
 
 ```js
 db.cinemas.insertOne({
-    address: [
-        {
-            city: "Beaune",
-            number: 1,
-            street: "Rue de l'Arquebuse",
-            zipCode: "21200"
-        }
-    ],
-    name: "CGR Beaune",
+    name: "Cinema Beaune",
+    address: {
+        street: "Rue de la République",
+        city: "Beaune",
+        zip: 21200,
+        number: 1
+    },
     rooms: [
         {
             name: "Salle 1",
-            capacity: 100,
+            capacity: 200,
             broadcasts: []
         }
     ]
@@ -354,4 +352,56 @@ db.films.aggregate([
         $limit: 10
     },
 ])
+```
+
+### Requête 16 : Map Reduce pour afficher le nombre de ticket vendu par cinema
+
+```js
+db.cinemas.mapReduce(
+    function () {
+        this.rooms.forEach(function (room) {
+            var nb_ticket = 0;
+            room.broadcasts.forEach(function (broadcast) {
+                nb_ticket += broadcast.ticket_sold;
+            });
+            emit(this.name, nb_ticket);
+        });
+    },
+    function (key, values) {
+        return Array.sum(values);
+    },
+    {
+        out: "nb_ticket"
+    }
+)
+```
+
+### Requête 17 : Mise à jour de la collection cinema pour ajouter un champ "nb_ticket" qui contient le nombre de ticket vendu par cinema
+
+```js
+db.cinemas.aggregate([
+    {
+        $project: {
+            _id: 0,
+            name: 1,
+            nb_ticket: {
+                $sum: {
+                    $map: {
+                        input: "$rooms",
+                        as: "room",
+                        in: {
+                            $sum: "$$room.broadcasts.ticket_sold"
+                        }
+                    }
+                }
+            }
+        }
+    }
+]).forEach(function (cinema) {
+    db.cinemas.updateOne({name: cinema.name}, {
+        $set: {
+            nb_ticket: cinema.nb_ticket
+        }
+    });
+});
 ```

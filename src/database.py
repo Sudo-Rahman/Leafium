@@ -182,13 +182,13 @@ class Database:
 
     def drop_collection(self):
         """
-        Permet de supprimer une collection.
+        Permet de supprimer les collections films et cinemas.
         :param self:
         :return: None
         """
         self.db["films"].drop()
         self.db["cinemas"].drop()
-        print("Collection supprimée")
+        print("Collections films et cinemas supprimées")
 
     def populate(self, film: int):
         """
