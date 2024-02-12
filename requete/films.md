@@ -66,3 +66,28 @@ self.db.create_collection("films", validator={
     }
 })
 ```
+
+### Exemple de document
+
+```json
+{
+    "release_date": "2020-01-01",
+    "title": "Film",
+    "duration": 120,
+    "description": "Description du film",
+    "directors": ["Réalisateur 1", "Réalisateur 2"],
+    "categories": ["Catégorie 1", "Catégorie 2"],
+    "comments": [
+        {
+            "author": "Auteur 1",
+            "content": "Commentaire 1",
+            "rating": 5
+        },
+        {
+            "author": "Auteur 2",
+            "content": "Commentaire 2",
+            "rating": 4
+        }
+    ]
+}
+```
