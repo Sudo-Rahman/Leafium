@@ -7,6 +7,7 @@ import pymongo
 
 from data import *
 
+
 class Database:
 
     def __init__(self, host: str, port: int, database: str, user: str = None, password: str = None):
@@ -83,11 +84,21 @@ class Database:
                                     "description": "Diffusions",
                                     "items": {
                                         "bsonType": "object",
-                                        "required": ["_id_film", "date_broadcast", "price", "ticket_sold"],
+                                        "required": ["film", "date_broadcast", "price", "ticket_sold"],
                                         "properties": {
-                                            "_id_film": {
-                                                "bsonType": "objectId",
-                                                "description": "ID du film"
+                                            "film": {
+                                                "bsonType": "object",
+                                                "required": ["name", "_id"],
+                                                "properties": {
+                                                    "_id": {
+                                                        "bsonType": "objectId",
+                                                        "description": "l'id du film"
+                                                    },
+                                                    "name": {
+                                                        "bsonType": "string",
+                                                        "description": "nom du film"
+                                                    },
+                                                }
                                             },
                                             "date_broadcast": {
                                                 "bsonType": "string",
@@ -223,7 +234,8 @@ class Database:
                 ]
             })
 
-        films_id_list = [film["_id"] for film in self.get_films({}, {"_id": 1})]
+        films_id_list = [{"_id": film["_id"], "name": film["title"]} for film in
+                         self.get_films({}, {"_id": 1, "title": 1})]
 
         for cinama in cinemas:
             capacity = math.floor(random.random() * 500)
@@ -235,7 +247,7 @@ class Database:
                         "capacity": capacity,
                         "broadcasts": [
                             {
-                                "_id_film": films_id_list[math.floor(random.random() * len(films_id_list))],
+                                "film": films_id_list[math.floor(random.random() * len(films_id_list))],
                                 "date_broadcast": f"{math.floor(random.random() * 30)}/{math.floor(random.random() * 12)}/20{math.floor(random.random() * 24)} {math.floor(random.random() * 14 + 10)}:00:00",
                                 "price": math.floor(random.random() * 10) + 5,
                                 "ticket_sold": math.floor(random.random() * capacity)
@@ -450,26 +462,15 @@ class Database:
             pipeline = [
                 {"$unwind": "$rooms"},
                 {"$unwind": "$rooms.broadcasts"},
-                {"$group": {"_id": "$rooms.broadcasts._id_film",
+                {"$group": {"_id": "$rooms.broadcasts.film._id",
+                            "name": {"$first": "$rooms.broadcasts.film.name"},
                             "total_tickets_sold": {"$sum": "$rooms.broadcasts.ticket_sold"}}},
-                {"$lookup": {
-                    "from": "films",
-                    "localField": "_id",
-                    "foreignField": "_id",
-                    "as": "film_details"
-                }},
-                {"$unwind": "$film_details"},
-                {"$project": {
-                    "_id": 0,
-                    "title": "$film_details.title",
-                    "total_tickets_sold": 1
-                }},
                 {"$sort": {"total_tickets_sold": -1}},
                 {"$limit": limit}
             ]
 
             data = list(self.db["cinemas"].aggregate(pipeline))
-            titles = [movie['title'] for movie in data]
+            titles = [movie['name'] for movie in data]
             tickets_sold = [movie['total_tickets_sold'] for movie in data]
             print(f"Les {limit} films ayant vendu le plus de tickets sont:")
             for i in range(len(titles)):
@@ -479,7 +480,7 @@ class Database:
                 print(f"{title} avec \033[94m{tickets_sold[i]}\033[0m {tickets_sold_text}")
             sum_tickets_sold = sum(tickets_sold)
             total_tickets_sold = self.get_total_tickets_sold()
-            title_string = "Diagramme des parts de marché des " + str(total_tickets_sold) + " tickets vendus"
+            title_string = "Diagramme des parts de marché des " + str(total_tickets_sold) + " tickets vendus par film"
             valeurs = tickets_sold + [self.get_total_tickets_sold() - sum_tickets_sold]
             etiquettes = titles + ['Autres']
             plt.pie(valeurs, labels=etiquettes, autopct='%1.1f%%', startangle=90)
@@ -507,11 +508,6 @@ class Database:
                 {"$group": {"_id": "$_id",
                             "name": {"$first": "$name"},
                             "total_tickets_sold": {"$sum": "$rooms.broadcasts.ticket_sold"}}},
-                {"$project": {
-                    "_id": 0,
-                    "name": 1,
-                    "total_tickets_sold": 1
-                }},
                 {"$sort": {"total_tickets_sold": -1}},
                 {"$limit": limit}
             ]
@@ -554,25 +550,14 @@ class Database:
                 {"$unwind": "$rooms"},
                 {"$unwind": "$rooms.broadcasts"},
                 {"$match": {"rooms.broadcasts.price": {"$lt": price}}},
-                {"$group": {"_id": "$rooms.broadcasts._id_film", "prix": {"$first": "$rooms.broadcasts.price"}}},
-                {"$lookup": {
-                    "from": "films",
-                    "localField": "_id",
-                    "foreignField": "_id",
-                    "as": "film_details"
-                }},
-                {"$unwind": "$film_details"},
-                {"$project": {
-                    "_id": 0,
-                    "title": "$film_details.title",
-                    "prix": 1
-                }},
+                {"$group": {"_id": "$rooms.broadcasts.film._id", "name": {"$first": "$rooms.broadcasts.film.name"},
+                            "prix": {"$first": "$rooms.broadcasts.price"}}},
                 {"$sort": {"prix": -1}},
                 {"$limit": limit}
             ]
 
             data = list(self.db["cinemas"].aggregate(pipeline))
-            titles = [movie['title'] for movie in data]
+            titles = [movie['name'] for movie in data]
             prices = [movie['prix'] for movie in data]
             print(f"Les {limit} films dont le prix est inférieur à \033[92m{price}$\033[0m sont:\033[0m")
             for i in range(len(titles)):
@@ -594,3 +579,4 @@ class Database:
         except Exception as e:
             print(f"Erreur lors de la récupération des données: {e}")
             return None
+

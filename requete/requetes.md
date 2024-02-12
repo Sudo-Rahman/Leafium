@@ -127,10 +127,11 @@ db.cinemas.aggregate([
                                     input: "$$room.broadcasts",
                                     as: "broadcast",
                                     in: {
-                                        _id_film: "$$broadcast._id_film",
+                                        _id_film: "$$broadcast.film._id",
                                         recette: {
                                             $multiply: ["$$broadcast.ticket_sold", "$$broadcast.price"]
-                                        }
+                                        },
+                                        name: "$$broadcast.film.name",
                                     }
                                 }
                             }
@@ -150,7 +151,10 @@ db.cinemas.aggregate([
         $group: {
             _id: "$chiffre_affaire.salle.film._id_film",
             recette: {
-                $sum: "$chiffre_affaire.salle.film.recette"
+                $sum: "$chiffre_affaire.salle.film.recette",
+            },
+            name: {
+                $first: "$chiffre_affaire.salle.film.name"
             }
         }
     },
@@ -161,24 +165,6 @@ db.cinemas.aggregate([
     },
     {
         $limit: 1
-    },
-    {
-        $lookup: {
-            from: "films",
-            localField: "_id",
-            foreignField: "_id",
-            as: "film"
-        }
-    },
-    {
-        $unwind: "$film"
-    },
-    {
-        $project: {
-            _id: 0,
-            name: "$film.title",
-            recette: 1
-        }
     }
 ])
 ```
@@ -257,8 +243,9 @@ db.cinemas.aggregate([
                                 input: "$$room.broadcasts",
                                 as: "broadcast",
                                 in: {
-                                    _id_film: "$$broadcast._id_film",
-                                    entree: "$$broadcast.ticket_sold"
+                                    _id_film: "$$broadcast.film._id",
+                                    entree: "$$broadcast.ticket_sold",
+                                    name: "$$broadcast.film.name",
                                 }
                             }
                         }
@@ -278,6 +265,9 @@ db.cinemas.aggregate([
             _id: "$_.film._id_film",
             entree: {
                 $sum: "$_.film.entree"
+            },
+            name: {
+                $first: "$_.film.name"
             }
         }
     },
@@ -288,24 +278,6 @@ db.cinemas.aggregate([
     },
     {
         $limit: 10
-    },
-    {
-        $lookup: {
-            from: "films",
-            localField: "_id",
-            foreignField: "_id",
-            as: "film"
-        }
-    },
-    {
-        $unwind: "$film"
-    },
-    {
-        $project: {
-            _id: 0,
-            title: "$film.title",
-            entree: 1
-        }
     }
 ])
 ```
@@ -404,4 +376,15 @@ db.cinemas.aggregate([
         }
     });
 });
+```
+
+### Requête 18 : Passer les notes des commentaires entre 0 et 5 à entre 0 et 20
+
+```js
+db.films.find({}).forEach(function (film) {
+    film.comments.forEach(function (comment) {
+        comment.rating *= 4
+        db.films.updateOne({_id: film._id}, {$set: {comments: film.comments}})
+    })
+})
 ```
