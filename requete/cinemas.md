@@ -82,3 +82,31 @@ self.db.create_collection("cinemas", validator={
     }
 })
 ```
+
+### Exemple de document
+
+```json
+{
+    "name": "Cinéma Le Rex",
+    "address": {
+        "city": "Paris",
+        "number": 1,
+        "street": "Boulevard",
+        "zip": 75000
+    },
+    "rooms": [
+        {
+            "name": "Salle 1",
+            "capacity": 100,
+            "broadcasts": [
+                {
+                    "_id_film": ObjectId("5f5f3e3e3e3e3e3e3e3e3e3e"),
+                    "date_broadcast": "2020-01-01",
+                    "price": 10,
+                    "ticket_sold": 100
+                }
+            ]
+        }
+    ]
+}
+```
