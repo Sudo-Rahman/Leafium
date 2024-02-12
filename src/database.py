@@ -7,6 +7,7 @@ import pymongo
 
 from data import *
 
+
 class Database:
 
     def __init__(self, host: str, port: int, database: str, user: str = None, password: str = None):
@@ -83,11 +84,21 @@ class Database:
                                     "description": "Diffusions",
                                     "items": {
                                         "bsonType": "object",
-                                        "required": ["_id_film", "date_broadcast", "price", "ticket_sold"],
+                                        "required": ["film", "date_broadcast", "price", "ticket_sold"],
                                         "properties": {
-                                            "_id_film": {
-                                                "bsonType": "objectId",
-                                                "description": "ID du film"
+                                            "film": {
+                                                "bsonType": "object",
+                                                "required": ["name", "_id"],
+                                                "properties": {
+                                                    "_id": {
+                                                        "bsonType": "objectId",
+                                                        "description": "l'id du film"
+                                                    },
+                                                    "name": {
+                                                        "bsonType": "string",
+                                                        "description": "nom du film"
+                                                    },
+                                                }
                                             },
                                             "date_broadcast": {
                                                 "bsonType": "string",
@@ -223,7 +234,8 @@ class Database:
                 ]
             })
 
-        films_id_list = [film["_id"] for film in self.get_films({}, {"_id": 1})]
+        films_id_list = [{"_id": film["_id"], "name": film["title"]} for film in
+                         self.get_films({}, {"_id": 1, "title": 1})]
 
         for cinama in cinemas:
             capacity = math.floor(random.random() * 500)
@@ -235,7 +247,7 @@ class Database:
                         "capacity": capacity,
                         "broadcasts": [
                             {
-                                "_id_film": films_id_list[math.floor(random.random() * len(films_id_list))],
+                                "film": films_id_list[math.floor(random.random() * len(films_id_list))],
                                 "date_broadcast": f"{math.floor(random.random() * 30)}/{math.floor(random.random() * 12)}/20{math.floor(random.random() * 24)} {math.floor(random.random() * 14 + 10)}:00:00",
                                 "price": math.floor(random.random() * 10) + 5,
                                 "ticket_sold": math.floor(random.random() * capacity)
