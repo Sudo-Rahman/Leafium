@@ -85,7 +85,6 @@ titres_de_films = [
     "Spider Man",
     "Batman",
     "Super Man",
-    "WonderWoman",
     "The Flash",
     "Aquaman",
     "Green Lantern",
@@ -93,7 +92,68 @@ titres_de_films = [
     "Captain America",
     "Thor",
     "Hulk",
-    "Doctor Strange"
+    "Doctor Strange",
+    "Tenet",
+    "RRRrrrr!!!",
+    "Les Visiteurs",
+    "Les Visiteurs 2",
+    "Shawn of the Dead",
+    "Hot Fuzz",
+    "The World's End",
+    "The Big Lebowski",
+    "The Hateful Eight",
+    "The Good, the Bad and the Ugly",
+    "The Great Escape",
+    "The Great Dictator",
+    "The Godfather",
+    "The General",
+    "The French Connection",
+    "The Deer Hunter",
+    "The Dark Knight",
+    "The Conversation",
+    "The Color Purple",
+    "The Big Sleep",
+    "The Big Heat",
+    "The Best Years of Our Lives",
+    "The Apartment",
+    "Le roi lion",
+    "Le roi lion 2",
+    "Frère des ours",
+    "Frère des ours 2",
+    "La belle et la bête",
+    "La belle et la bête 2",
+    "Aladdin",
+    "Aladdin 2",
+    "Aladeux",
+    "Le livre de la jungle",
+    "Leon",
+    "Le cinquième élément",
+    "Valérian",
+    "Starship Troopers",
+    "Starship Troopers 2",
+    "Arthur et les Minimoys",
+    "Arthur et la vengeance de Maltazard",
+    "Arthur 3",
+    "Taxi",
+    "Taxi 2",
+    "Le transporteur",
+    "Le transporteur 2 : Livraison à haut risque",
+    "Le transporteur 3 : Héritage",
+    "Taken",
+    "Star Wars 1 : La menace fantôme",
+    "Star Wars 2 : L'attaque des clones",
+    "Star Wars 3 : La revanche des Sith",
+    "Star Wars 4 : Un nouvel espoir",
+    "Star Wars 5 : L'empire contre-attaque",
+    "Star Wars 6 : Le retour du Jedi",
+    "Garfield",
+    "Shrek",
+    "Le seigneur des anneaux",
+    "Le seigneur des anneaux 2 : Les deux tours",
+    "Le seigneur des anneaux 3 : Le retour du roi",
+    "Le Hobbit",
+    "Le Hobbit 2 : La désolation de Smaug",
+    "Le Hobbit 3 : La bataille des cinq armées"
 ]
 
 commentaires_et_notes_de_films = [
@@ -392,5 +452,176 @@ cinemas = [
             "city": "Paris",
             "zip": 75006
         }
-    }
+    },
+    {
+        "name": "Cinéma Garfield",
+        "address": {
+            "street": "Rue de la Roquette",
+            "number": 4,
+            "city": "Dijon",
+            "zip": 21200
+        }
+    },
+    {
+        "name": "Cinéma Le Darcy",
+        "address": {
+            "street": "Rue du Port du Canal",
+            "number": 2,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Olympia",
+        "address": {
+            "street": "Rue de la Liberté",
+            "number": 16,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Eldorado",
+        "address": {
+            "street": "Rue de la Préfecture",
+            "number": 21,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Darcy",
+        "address": {
+            "street": "Rue du Port du Canal",
+            "number": 2,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Olympia",
+        "address": {
+            "street": "Rue de la Liberté",
+            "number": 16,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Eldorado",
+        "address": {
+            "street": "Rue de la Préfecture",
+            "number": 21,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Darcy",
+        "address": {
+            "street": "Rue du Port du Canal",
+            "number": 2,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Olympia",
+        "address": {
+            "street": "Rue de la Liberté",
+            "number": 16,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Eldorado",
+        "address": {
+            "street": "Rue de la Préfecture",
+            "number": 21,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Darcy",
+        "address": {
+            "street": "Rue du Port du Canal",
+            "number": 2,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Olympia",
+        "address": {
+            "street": "Rue de la Liberté",
+            "number": 16,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Eldorado",
+        "address": {
+            "street": "Rue de la Préfecture",
+            "number": 21,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Darcy",
+        "address": {
+            "street": "Rue du Port du Canal",
+            "number": 2,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Olympia",
+        "address": {
+            "street": "Rue de la Liberté",
+            "number": 16,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Eldorado",
+        "address": {
+            "street": "Rue de la Préfecture",
+            "number": 21,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Darcy",
+        "address": {
+            "street": "Rue du Port du Canal",
+            "number": 2,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Olympia",
+        "address": {
+            "street": "Rue de la Liberté",
+            "number": 16,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
+    {
+        "name": "Cinéma Eldorado",
+        "address": {
+            "street": "Rue de la Préfecture",
+            "number": 21,
+            "city": "Dijon",
+            "zip": 21000
+        }
+    },
 ]
