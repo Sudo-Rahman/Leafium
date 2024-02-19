@@ -1,0 +1,7 @@
+
+ssh mc150904@mongo2
+
+mongo -u mc150904 -p mc150904 -authenticationDatabase mc150904 -host mongo2.iem
+
+use mc150904
+

@@ -29,7 +29,7 @@ class Database:
 
     def create_collection_cinemas(self):
         """
-        Crée la collection cinemas.
+        Crée la collection cinemas avec un schéma de validation.
         :param self:
         :return: None
         """
@@ -124,7 +124,7 @@ class Database:
 
     def create_collection_films(self):
         """
-        Crée la collection films.
+        Crée la collection films avec un schéma de validation.
         :param self:
         :return: None
         """
@@ -430,7 +430,6 @@ class Database:
         :param self:
         :return: Le nombre total de tickets vendus.
         """
-
         try:
             if self.db is None:
                 raise ValueError("Erreur de connexion à la base de données")
@@ -441,7 +440,7 @@ class Database:
             ]
             data = list(self.db["cinemas"].aggregate(pipeline))
             total_tickets_sold = data[0]['total_tickets_sold']
-            # print(f"Le nombre total de tickets vendus est de \033[92m{total_tickets_sold}\033[0m")
+            print(f"Le nombre total de tickets vendus est de \033[92m{total_tickets_sold}\033[0m")
             return total_tickets_sold
 
         except Exception as e:
@@ -476,7 +475,6 @@ class Database:
             for i in range(len(titles)):
                 title = f"\033[92m{titles[i]}\033[0m"
                 tickets_sold_text = f"{'tickets vendus' if tickets_sold[i] > 1 else 'ticket vendu'}"
-                tickets_sold_number = f"\033[94m{tickets_sold[i]}\033[0m"
                 print(f"{title} avec \033[94m{tickets_sold[i]}\033[0m {tickets_sold_text}")
             sum_tickets_sold = sum(tickets_sold)
             total_tickets_sold = self.get_total_tickets_sold()
@@ -580,3 +578,21 @@ class Database:
             print(f"Erreur lors de la récupération des données: {e}")
             return None
 
+    def delete_films_with_director(self, director: str):
+        """
+        Supprime les films réalisés par un réalisateur donné.
+        :param self:
+        :param director: Le nom du réalisateur.
+        :return: Les films réalisés par le réalisateur donné.
+        """
+        try:
+            if self.db is None:
+                raise ValueError("Erreur de connexion à la base de données")
+
+            query = {"directors": director}
+            self.db["films"].delete_many(query)
+            print(f"Les films du réalisateur {director} ont été supprimés")
+
+        except Exception as e:
+            print(f"Erreur lors de la récupération des données: {e}")
+            return None
