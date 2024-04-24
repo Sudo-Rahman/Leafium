@@ -1,12 +1,14 @@
 from time import sleep
-
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-
 from database import Database
 
 
 def connection():
+    """
+    Connection à la base de données MongoDB en local ou sur le serveur de l'IEM
+    :return:
+    """
     host = "localhost"
     port = 27017
     database = "leafium"
@@ -23,7 +25,6 @@ def connection():
             print("\033[91mServeur non disponible\033[97m ->", e)
             exit(1)
     else:
-
         try:
             host = input(
                 "Appuyez sur Entrée pour vous connecter en \033[92mlocal\033[97m ou indiquez l'adresse du serveur\n") or host
