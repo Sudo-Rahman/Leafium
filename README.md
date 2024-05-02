@@ -37,6 +37,14 @@ un cinéma spécifique.
 - Gestion des Informations Cinématographiques : Stocker des données variées, telles que la description d'un film, les
   salles de diffusion, la durée de diffusion, le nombre d'entrées, etc.
 
+## Compatibilité
+
+<p align="center">
+  <img src="https://img.shields.io/badge/OS-MacOS-informational?style=flat&logo=apple&logoColor=white&color=2bbc8a" alt="MacOS" />
+  <img src="https://img.shields.io/badge/OS-Linux-informational?style=flat&logo=linux&logoColor=white&color=2bbc8a" alt="Linux" />
+  <img src="https://img.shields.io/badge/OS-Windows-informational?style=flat&logo=windows&logoColor=white&color=2bbc8a" alt="Windows" />
+</p>
+
 ## Prérequis
 
 - Python >= 3.10
@@ -82,5 +90,5 @@ python3 main.py
 
 Ce projet a été réalisé par:
 
-- [Sudo-Rahman](https://github.com/Sudo-Rahman)
 - [Maxime-Cllt](https://github.com/Maxime-Cllt)
+- [Sudo-Rahman](https://github.com/Sudo-Rahman)

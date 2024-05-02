@@ -214,6 +214,7 @@ class Database:
             self.create_collection_films()
             sleep(1)
 
+        # Insertion des films et des cinémas
         for i in range(film):
             self.insert_film({
                 "release_date": f"20{math.floor(random.random() * 24)}-01-01",

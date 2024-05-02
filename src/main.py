@@ -44,11 +44,16 @@ def connection():
 
 if __name__ == '__main__':
     try:
+        # Connexion à la base de données
         db = connection()
         sleep(1)
         print("\033[92m*** Connexion réussie à", db.host, "sur le port", db.port, "en tant que", db.user, "***\033[97m")
         # db.drop_collection()
-        db.populate(10)
+
+        # Création de la collection
+        db.populate(100)
+
+        # Exemple de requêtes
         db.get_average_rating_by_movie(5)
         db.get_movie_by_category("Action")
         db.get_movie_by_director("Steven Spielberg")
