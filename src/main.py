@@ -48,14 +48,15 @@ if __name__ == '__main__':
         db = connection()
         sleep(1)
         print("\033[92m*** Connexion réussie à", db.host, "sur le port", db.port, "en tant que", db.user, "***\033[97m")
-        # db.drop_collection()
+        db.drop_collection()
 
         # Création de la collection
-        db.populate(100)
+        db.populate(1000)
 
         # Exemple de requêtes
         db.get_average_rating_by_movie(5)
         db.get_movie_by_category("Action")
+        print(f"Le nombre total de tickets vendus est de \033[92m{db.get_total_tickets_sold()}\033[0m")
         db.get_movie_by_director("Steven Spielberg")
         db.get_top_movies_by_tickets_sold(5)
         db.get_top_cinema_by_tickets_sold(5)

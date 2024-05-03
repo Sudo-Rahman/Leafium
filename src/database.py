@@ -441,7 +441,6 @@ class Database:
             ]
             data = list(self.db["cinemas"].aggregate(pipeline))
             total_tickets_sold = data[0]['total_tickets_sold']
-            print(f"Le nombre total de tickets vendus est de \033[92m{total_tickets_sold}\033[0m")
             return total_tickets_sold
 
         except Exception as e:
@@ -561,8 +560,7 @@ class Database:
             print(f"Les {limit} films dont le prix est inférieur à \033[92m{price}$\033[0m sont:\033[0m")
             for i in range(len(titles)):
                 title = f"\033[92m{titles[i]}\033[0m"
-                price_text = f"{'prix' if prices[i] > 1 else 'prix'}"
-                print(f"{title} avec un \033[94m{prices[i]}$\033[0m {price_text}")
+                print(f"{title} avec un prix de \033[94m{prices[i]}$\033[0m")
 
             plt.figure(figsize=(12, 8))
             plt.bar(titles, prices, color='skyblue', edgecolor='black', linewidth=1.2)
